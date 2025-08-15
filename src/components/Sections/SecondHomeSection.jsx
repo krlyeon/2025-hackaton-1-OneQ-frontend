@@ -1,3 +1,4 @@
+
 import React from "react";
 import * as S from "./SecondHomeSection.styles";
 
@@ -50,3 +51,4 @@ const SecondHomeSection = () => {
 };
 
 export default SecondHomeSection;
+

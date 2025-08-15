@@ -1,3 +1,4 @@
+
 import NavBar from "../components/NavBar.jsx";
 import GlobalStyle from "./App.js";
 import FirstHomeSection from "../components/Sections/FirstHomeSection.jsx";
@@ -15,3 +16,4 @@ export default function Home() {
     </main>
   );
 }
+
