@@ -20,7 +20,7 @@ const N = {
     padding: 10px var(--Desktop-Margin, 32px);
     flex-direction: row;
     align-items: flex-start;
-    gap: 396px;
+    gap: 440px;
     align-self: stretch;
   `,
 

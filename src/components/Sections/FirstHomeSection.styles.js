@@ -32,7 +32,7 @@ const S = {
     align-items: flex-start;
     align-self: stretch;
     background: rgb(26 26 26);
-    gap: 185px;
+    gap: 250px;
     align-items: center;
   `,
   Title: styled.h1`
@@ -44,7 +44,10 @@ const S = {
     line-height: normal;
 
 `,
-  Chevron: styled.img`/* ... */`,
-};
+  Chevron: styled.img`
+  transition: all 0.3s ease;
+      cursor: pointer;
+    `,
+  };
 
 export default S;
