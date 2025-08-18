@@ -27,6 +27,10 @@ export const Center = styled.div`
 
 export const Right = styled.div`
   flex: 1;
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  margin-right: 75px;
 `;
 
 export const BackButton = styled.button`
@@ -40,6 +44,28 @@ export const BackButton = styled.button`
   img {
     width: 50px;
     height: 50px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+  }
+`;
+
+export const GoButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+
+  display: flex;
+  padding: 4px;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  border-radius: 10px;
+  background: var(--Primary-500, #06f);
+
+  img {
+    width: 28.8px;
+    height: 28.8px;
     aspect-ratio: 1/1;
     object-fit: contain;
   }
