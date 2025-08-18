@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import * as C from "./NavBarChats.styles";
 
-import arrowBackIcon from "../assets/arrow-back.png";
-import dottedLineIcon from "../assets/line-dotted.png";
-import checkBarIcon from "../assets/check-bar.png";
-import arrowRightBarIcon from "../assets/arrow-right-bar.png";
+import arrowBackIcon from "../../assets/arrow-back.png";
+import dottedLineIcon from "../../assets/line-dotted.png";
+import checkBarIcon from "../../assets/check-bar.png";
+import arrowRightBarIcon from "../../assets/arrow-right-bar.png";
 
 const NavBarChose = () => {
   const [showBalloon, setShowBalloon] = useState(false);

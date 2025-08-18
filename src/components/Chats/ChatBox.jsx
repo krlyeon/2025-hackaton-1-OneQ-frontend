@@ -34,14 +34,22 @@ export default function ChatBox() {
             {askMode && choices.length > 0 && (
             <C.ChoicesContainer>
                 {choices.map((c, idx) => (
-                <C.ChoiceButton key={idx} onClick={() => sendChoice(c)}>
+                <C.ChoiceButton
+                    type="button"
+                    onClick={() => {
+                        const v = String(c);
+                        setText(v);
+                        send(v);
+                        setText("");
+                    }}
+                    >
                     {c}
                 </C.ChoiceButton>
                 ))}
             </C.ChoicesContainer>
             )}
 
-            {loading && <C.LoadingText>답변을 생성 중입니다…</C.LoadingText>}
+            {loading && <C.LoadingText></C.LoadingText>}
         </C.ChatWindow>
         <C.ChatForm onSubmit={onSubmit}>
             <C.ChatInput
@@ -56,7 +64,6 @@ export default function ChatBox() {
 
         {lastResponse?.missing && (
             <C.DebugInfo>
-            <b>필요 정보:</b> {lastResponse.missing.join(", ")}
             </C.DebugInfo>
         )}
         </C.ChatContainer>
