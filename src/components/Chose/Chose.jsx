@@ -1,7 +1,7 @@
 // Components/Chose/Chose.jsx
 import React, { useRef, useState } from "react";
 import S from "./Chose.styles";
-
+import { useNavigate } from "react-router-dom";
 import checkIcon from "../../assets/check.png";
 
 import imgSticker from "../../assets/img-sticker.png";
@@ -42,6 +42,7 @@ const Chose = () => {
   const [selected, setSelected] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     if (!scrollRef.current || isDragging) return;
@@ -123,7 +124,9 @@ const Chose = () => {
           </S.ScrollbarArea>
         </S.CardArea>
         <S.ButtonArea>
-          <S.StartButton disabled={!selected}>
+          <S.StartButton 
+            disabled={!selected}
+            onClick={() => navigate("/chat")}>
             시작하기
           </S.StartButton>
         </S.ButtonArea>
