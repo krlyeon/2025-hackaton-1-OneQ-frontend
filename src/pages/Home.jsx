@@ -5,6 +5,7 @@ import FirstHomeSection from "../components/Sections/FirstHomeSection.jsx";
 import SecondHomeSection from "../components/Sections/SecondHomeSection.jsx";
 import ThirdHomeSection from "../components/Sections/ThirdHomeSection.jsx";
 import Footer from "../components/Footer.jsx";
+import Modal from "../components/Common/Modal2.jsx";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <div id="third-section">
         <ThirdHomeSection />
       </div>
+      <Modal />
       <Footer />
     </main>
   );

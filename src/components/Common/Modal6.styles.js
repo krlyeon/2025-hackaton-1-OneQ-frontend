@@ -18,7 +18,7 @@ const M = {
     display: flex;
     padding-bottom: 50px;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 10px;
     border-radius: 20px;
     background: var(--Neutral-100, #F2F2F2);
@@ -35,6 +35,8 @@ const M = {
     display: flex;
     width: 24px;
     height: 24px;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
   `,
 
@@ -52,7 +54,7 @@ const M = {
   Warning: styled.div`
     display: flex;
     padding: 0 64px;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 22px;
     align-self: stretch;
   `,
@@ -60,10 +62,11 @@ const M = {
   // 정보/경고 아이콘
   Icon: styled.img`
     display: flex;
-    align-items: flex-start;
     width: 102px;
     height: 102px;
     padding: 25.191px 7.931px 15.504px 7.931px;
+    justify-content: center;
+    align-items: center;
     aspect-ratio: 1/1;
     
   `,
@@ -137,7 +140,7 @@ const M = {
     gap: 10px;
     color: var(--Neutral-100, #F2F2F2);
     border-radius: 20px;
-    background: var(--Neutral-300, #BFBFBF);
+    background: var(--Neutral-600, #1A1A1A);
     text-align: center;
     font-family: Pretendard;
     font-size: 24px;
