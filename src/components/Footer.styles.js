@@ -6,7 +6,7 @@ Container: styled.footer`
     color: #f2f2f2;
     display: flex;
     height: 349px;
-    padding: 50px 32px 50px 28px;
+    padding: 22px 32px 0px 28px;
     flex-direction: column;
     align-items: flex-start;
     gap: 43px;

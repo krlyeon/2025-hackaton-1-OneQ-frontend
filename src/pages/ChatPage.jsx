@@ -1,13 +1,13 @@
 import GlobalStyle from "../App.js";
-import NavBarChose from "../components/Chose/NavBarChose.jsx";
+import NavBarChats from "../components/Chats/NavBarChats.jsx";
 import Chat from "../components/Chats/ChatBox.jsx";
 
-export default function ChosePage() {
-  return (
-    <main>
-      <GlobalStyle />
-      <NavBarChose />
-      <Chat />
-    </main>
-  );
+export default function ChatPage() {
+    return (
+        <main>
+        <GlobalStyle />
+        <NavBarChats/>
+        <Chat />
+        </main>
+    );
 }

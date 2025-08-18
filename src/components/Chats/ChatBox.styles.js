@@ -11,7 +11,7 @@ const C = {
 
     ChatWindow: styled.div`
         padding: 16px 12px;
-        height: 75vh;                
+        height: 70vh;                
         overflow-y: auto;
         scrollbar-width: none;   
         -ms-overflow-style: none; 
