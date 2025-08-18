@@ -10,6 +10,7 @@ export const Container = styled.section.withConfig({
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const Title = styled.h1`
@@ -26,7 +27,9 @@ export const Title = styled.h1`
     color: var(--Primary-500, #06f);
     background: var(--Neutral-100, #f2f2f2);
     display: inline-block;
-    line-height: 1.15;
+    line-height: 1.2;
+    padding: 9px 9px 0px 9px;
+    
   }
 `;
 
@@ -47,6 +50,7 @@ export const CardGrid = styled.div`
   justify-content: center;
   gap: 24px;
   align-self: stretch;
+  margin-bottom: 62px;
 `;
 export const Card = styled.div`
   width: 389px;
@@ -72,8 +76,8 @@ export const Card = styled.div`
 `;
 
 export const Icon = styled.img`
-  width: 72px;
-  height: 72px;
+  width: 60px;
+  height: 60px;
   flex-shrink: 0;
   margin-top: 81px;
 `;
@@ -96,19 +100,14 @@ export const CardTitle = styled.h3`
 
 export const CardDesc = styled.p`
   color: var(--Neutral-100, #f2f2f2);
-
-  /* Shadow-Soft */
   text-shadow: 10px 10px 40px rgba(0, 0, 0, 0.3);
-
-  /* Body/Large1 */
   font-family: Pretendard;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-
-  opacity: 0.7;
-
   margin: 0;
   margin-top: 7px;
+  opacity: ${({ $hovered }) => ($hovered ? 1 : 0.7)};
+  transition: opacity 0.2s;
 `;
