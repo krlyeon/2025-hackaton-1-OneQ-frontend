@@ -13,7 +13,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 42px;
+  gap: 30px;
   width: 100%;
   max-width: 1176px;
   margin: 0 auto;
@@ -34,7 +34,7 @@ const TitleArea = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  margin-top: 128px;
+  margin-top: 108px;
   margin-bottom: 42px;
 `;
 
@@ -167,7 +167,7 @@ const ButtonArea = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1176px;
-  margin: 0 auto;
+  margin: 0px auto;
 `;
 
 const StartButton = styled.button`
