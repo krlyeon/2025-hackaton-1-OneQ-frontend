@@ -6,9 +6,12 @@ import RightCategoryCard2 from "../../assets/poster.svg";
 import RightCategoryCard3 from "../../assets/placard.svg";
 import LeftCategoryCard3 from "../../assets/brochure.svg";
 import LeftCategoryCard4 from "../../assets/book.svg";
+import { useNavigate } from "react-router-dom";
 
 
 export default function ThirdHomeSection() {
+
+    const navigate = useNavigate();
   return (
     <S.Container>
         <S.LeftSection>
@@ -19,7 +22,9 @@ export default function ThirdHomeSection() {
             <S.Subtitle>
                 간단한 대화로 수십 개 인쇄소의 견적을 손쉽게 비교하세요.
             </S.Subtitle>
-            <S.Button>한 번에 견적 받기</S.Button>
+            <S.Button onClick={() => navigate("/chose")}>
+                한 번에 견적 받기
+            </S.Button>
         </S.LeftSection>
 
         <S.RightSection>
