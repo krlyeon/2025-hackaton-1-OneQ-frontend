@@ -108,6 +108,10 @@ const S = {
     font-weight: 600;
     line-height: normal;
     cursor: pointer;
+
+    &:hover {
+    background: rgb(0 82 204);
+  }
   `,
 };
 
