@@ -61,11 +61,6 @@ export default function ChatBox() {
                 <img src={SendIcon} alt="Send" />
             </C.ChatButton>
         </C.ChatForm>
-
-        {lastResponse?.missing && (
-            <C.DebugInfo>
-            </C.DebugInfo>
-        )}
         </C.ChatContainer>
     );
 }

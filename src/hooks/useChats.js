@@ -7,7 +7,7 @@ function getOrCreateSessionId() {
     const key = "oneq_session_id"
     let v = localStorage.getItem(key)
     if (!v) {
-        v = Math.random().toString(36).slice(2) // 간단 UUID 대체
+        v = Math.random().toString(36).slice(2)
         localStorage.setItem(key, v)
     }
     return v
@@ -33,8 +33,8 @@ export default function useChat() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-            message: userText,      // ← 오타 방지 위해 message 사용
-            session_id: sessionId,  // ← 세션 유지
+            message: userText,
+            session_id: sessionId,
             }),
         })
 

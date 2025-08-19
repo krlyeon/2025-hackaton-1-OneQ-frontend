@@ -42,6 +42,7 @@ const M = {
     width: 24px;
     height: 24px;
     gap: 10px;
+    cursor: pointer;
   `,
 
   // 본문 영역

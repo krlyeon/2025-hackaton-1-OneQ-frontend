@@ -43,6 +43,7 @@ const M = {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
   `,
 
   // 본문 영역
