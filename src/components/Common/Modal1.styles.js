@@ -11,6 +11,12 @@ const M = {
     gap: 10px;
     flex-shrink: 0;
     background: rgba(0, 0, 0, 0.40);
+    position: fixed;
+    inset: 0;               /* top/right/bottom/left: 0 */
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    box-sizing: border-box;
   `,
 
   // 다이얼로그 컨테이너
