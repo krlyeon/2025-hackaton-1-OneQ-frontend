@@ -101,7 +101,9 @@ const C = {
         display: flex;
         gap: 8px;
         margin-top: 12px;
+        align-items: center;
     `,
+    
     ChatInput: styled.input`
         flex: 1;
         padding: 14px 16px;

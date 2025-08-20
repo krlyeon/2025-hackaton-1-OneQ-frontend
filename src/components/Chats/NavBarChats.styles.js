@@ -191,7 +191,6 @@ export const Balloon = styled.div`
   flex-direction: column;
   align-items: center;
   z-index: 1000;
-
   fill: var(--Neutral-100, #f2f2f2);
   stroke-width: 1px;
   stroke: var(--Neutral-300, #bfbfbf);

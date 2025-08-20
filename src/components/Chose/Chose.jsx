@@ -36,6 +36,15 @@ const cardData = [
 
 ];
 
+const idToCategory = {
+  1: "스티커",
+  2: "명함",
+  3: "포스터",
+  4: "브로슈어",
+  5: "배너",
+  6: "현수막",
+};
+
 const Chose = () => {
   const scrollRef = useRef(null);
   const scrollbarRef = useRef(null);
@@ -86,6 +95,8 @@ const Chose = () => {
     setSelected(id);
   };
 
+  const getSelectedCategory = () => idToCategory[selected] || "";
+
   return (
     <S.Section>
       <S.Content>
@@ -126,7 +137,10 @@ const Chose = () => {
         <S.ButtonArea>
           <S.StartButton 
             disabled={!selected}
-            onClick={() => navigate("/chat")}>
+            onClick={() =>
+            navigate("/chat", { state: { category: getSelectedCategory() } })
+                }
+              >
             시작하기
           </S.StartButton>
         </S.ButtonArea>

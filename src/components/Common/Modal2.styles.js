@@ -3,7 +3,6 @@ import styled from "styled-components";
 const M = {
   Modal: styled.div`
     display: flex;
-    height: 100vh;
     padding: 125px 119px;
     flex-direction: column;
     justify-content: center;
@@ -11,6 +10,12 @@ const M = {
     gap: 10px;
     flex-shrink: 0;
     background: rgba(0, 0, 0, 0.40);
+    position: fixed;
+    inset: 0;               /* top/right/bottom/left: 0 */
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    box-sizing: border-box;
   `,
 
   // 다이얼로그 컨테이너
@@ -38,6 +43,7 @@ const M = {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
   `,
 
   // 본문 영역
