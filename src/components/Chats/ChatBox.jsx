@@ -1,11 +1,13 @@
 // src/components/Chats/ChatBox.jsx
 import { useEffect, useRef, useState } from "react";
-import useChat from "../../hooks/useChats";
+import useChat from "../../hooks/useChats"; 
 import C from "../Chats/ChatBox.styles.js";
-import SendIcon from "../../assets/ChatBot/send.svg"
+import SendIcon from "../../assets/ChatBot/send.svg";
 
 export default function ChatBox() {
-    const { messages, send, sendChoice, loading, lastResponse } = useChat();
+    const { messages, send, sendChoice, loading, lastResponse } =
+        useChat({ ignoreStoredSession: true });
+
     const [text, setText] = useState("");
     const askMode = lastResponse?.type === "ask";
     const choices = lastResponse?.choices || [];
@@ -13,15 +15,17 @@ export default function ChatBox() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        send(text);
+        const v = text.trim();
+        if (!v || loading) return;
+        send(v);
         setText("");
     };
 
-  // 새 메시지 오면 맨 아래로 스크롤
+    // 로딩에 변화가 있는 경우 맨 아래로 스크롤
     useEffect(() => {
         const el = scrollRef.current;
         if (el) el.scrollTop = el.scrollHeight;
-    }, [messages, loading, choices]);
+    }, [messages, loading, choices.length]);
 
     return (
         <C.ChatContainer>
@@ -31,26 +35,30 @@ export default function ChatBox() {
                 <C.Bubble role={m.role}>{m.content}</C.Bubble>
             </C.MessageRow>
             ))}
+
             {askMode && choices.length > 0 && (
             <C.ChoicesContainer>
                 {choices.map((c, idx) => (
                 <C.ChoiceButton
+                    key={`${idx}-${String(c)}`} 
                     type="button"
                     onClick={() => {
-                        const v = String(c);
-                        setText(v);
-                        send(v);
-                        setText("");
+                    const v = String(c);
+                    if (loading) return;
+                    setText(v);
+                    send(v);
+                    setText("");
                     }}
-                    >
+                >
                     {c}
                 </C.ChoiceButton>
                 ))}
             </C.ChoicesContainer>
             )}
 
-            {loading && <C.LoadingText></C.LoadingText>}
+            {loading && <C.LoadingText>생각중…</C.LoadingText>}
         </C.ChatWindow>
+
         <C.ChatForm onSubmit={onSubmit}>
             <C.ChatInput
             value={text}
@@ -58,7 +66,7 @@ export default function ChatBox() {
             placeholder="채팅을 입력해주세요"
             />
             <C.ChatButton type="submit" disabled={loading || !text.trim()}>
-                <img src={SendIcon} alt="Send" />
+            <img src={SendIcon} alt="Send" />
             </C.ChatButton>
         </C.ChatForm>
         </C.ChatContainer>
