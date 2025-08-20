@@ -1,17 +1,24 @@
 // src/components/Chats/ChatBox.jsx
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import useChat from "../../hooks/useChats"; 
 import C from "../Chats/ChatBox.styles.js";
 import SendIcon from "../../assets/ChatBot/send.svg";
 
 export default function ChatBox() {
+    const { state } = useLocation();                        
+    const category = state?.category || "";           
+
     const { messages, send, sendChoice, loading, lastResponse } =
-        useChat({ ignoreStoredSession: true });
+        useChat({ ignoreStoredSession: true, category }); 
+
 
     const [text, setText] = useState("");
     const askMode = lastResponse?.type === "ask";
     const choices = lastResponse?.choices || [];
     const scrollRef = useRef(null);
+
+    
 
     const onSubmit = (e) => {
         e.preventDefault();
