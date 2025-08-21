@@ -78,7 +78,6 @@ function pickAssistantText(data) {
 
             const sid = data?.session_id || data?.id;
             if (!sid) throw new Error("세션 ID가 응답에 없습니다.");
-
             localStorage.setItem(SESSION_KEY, sid);
             setSessionId(sid);
 
@@ -146,6 +145,5 @@ function pickAssistantText(data) {
     };
 
     const sendChoice = async (choiceText) => send(choiceText);
-
     return { messages, send, sendChoice, loading, error, lastResponse, sessionId };
     }

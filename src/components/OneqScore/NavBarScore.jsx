@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import * as C from "../components/Chose/NavBarChose.styles";
+import * as C from "../Chose/NavBarChose.styles";
 
-import arrowBackIcon from "../assets/arrow-back.png";
-import dottedLineIcon from "../assets/line-dotted.png";
-import checkBarIcon from "../assets/check-bar.png";
+import arrowBackIcon from "../../assets/arrow-back.png";
+import dottedLineIcon from "../../assets/line-dotted.png";
+import checkBarIcon from "../../assets/check-bar.png";
 
 const NavBarChose = () => {
   const [showBalloon, setShowBalloon] = useState(false);
