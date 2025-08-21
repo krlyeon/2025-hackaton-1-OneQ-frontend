@@ -59,6 +59,13 @@ const S = {
     background: var(--Neutral-100, #F2F2F2);
   `,
 
+  Vector: styled.div`
+    width: 758px;
+    height: 1px;
+    stroke-width: 1px;
+    stroke: var(--Neutral-300, #BFBFBF);
+  `,
+
   Content: styled.div`
     display: flex;
     padding: 12px 28px 18px 28px;

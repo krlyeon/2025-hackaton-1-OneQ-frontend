@@ -10,6 +10,7 @@ export default function SecondScoreSection() {
             <S.Title>최종 견적을 확인하세요</S.Title>
             <S.ContentContainer>
                 <S.Header></S.Header>
+                <S.Vector></S.Vector>
                 <S.Content>
                     <S.Context>dsxcdd</S.Context>
                 </S.Content>
