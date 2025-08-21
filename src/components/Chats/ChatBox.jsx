@@ -12,13 +12,10 @@ export default function ChatBox() {
     const { messages, send, sendChoice, loading, lastResponse } =
         useChat({ ignoreStoredSession: true, category }); 
 
-
     const [text, setText] = useState("");
     const askMode = lastResponse?.type === "ask";
     const choices = lastResponse?.choices || [];
     const scrollRef = useRef(null);
-
-    
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -62,10 +59,8 @@ export default function ChatBox() {
                 ))}
             </C.ChoicesContainer>
             )}
-
             {loading && <C.LoadingText>생각중…</C.LoadingText>}
         </C.ChatWindow>
-
         <C.ChatForm onSubmit={onSubmit}>
             <C.ChatInput
             value={text}

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const API_BASE =
-    (import.meta.env.VITE_API_BASE?.replace(/\/$/, "") || "http://127.0.0.1:8000/api");
+    (import.meta.env.VITE_API_BASE?.replace(/\/$/, ""));
 const SESSION_KEY = "oneq_server_session_id";
 
 async function parseSafe(res) {
@@ -78,7 +78,6 @@ function pickAssistantText(data) {
 
             const sid = data?.session_id || data?.id;
             if (!sid) throw new Error("세션 ID가 응답에 없습니다.");
-
             localStorage.setItem(SESSION_KEY, sid);
             setSessionId(sid);
 
@@ -146,6 +145,5 @@ function pickAssistantText(data) {
     };
 
     const sendChoice = async (choiceText) => send(choiceText);
-
     return { messages, send, sendChoice, loading, error, lastResponse, sessionId };
     }

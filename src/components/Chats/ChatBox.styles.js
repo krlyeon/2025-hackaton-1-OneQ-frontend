@@ -20,7 +20,6 @@ const C = {
     }
     `,
 
-  /* 한 메시지의 행(좌/우 정렬) */
     MessageRow: styled.div`
         display: flex;
         margin: 8px 0;
@@ -34,7 +33,6 @@ const C = {
             `}
     `,
 
-  /* 실제 말풍선 */
     Bubble: styled.div`
         position: relative;
         padding: 9px 12px;
@@ -47,8 +45,8 @@ const C = {
     ${({ role }) =>
     role === "user"
         ? css`
-            background: #0066FF;                 /* 보낸 쪽 */
-            border-bottom-right-radius: 6px;     /* 꼬리쪽 라운드 */
+            background: #0066FF;                
+            border-bottom-right-radius: 6px;
             /* 꼬리 */
             &::after {
                 content: "";
@@ -126,7 +124,7 @@ const C = {
     img {
         width: 14.56px;
         height: 17.437px;
-        pointer-events: none;     /* 아이콘 클릭도 버튼으로 인식되게 */
+        pointer-events: none;
     }
 
     ${(props) =>
