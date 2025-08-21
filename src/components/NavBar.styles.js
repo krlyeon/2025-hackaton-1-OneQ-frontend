@@ -15,7 +15,7 @@ const N = {
     height: 55px;
     align-items: center;
     background: rgb(26 26 26);
-    box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.30);
+    box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.3);
     display: flex;
     padding: 10px var(--Desktop-Margin, 32px);
     flex-direction: row;
@@ -47,7 +47,7 @@ const N = {
     justify-content: center;
     align-items: center;
     align-self: stretch;
-    color: var(--Neutral-100, #F2F2F2);
+    color: var(--Neutral-100, #f2f2f2);
     text-align: center;
     font-family: Pretendard;
     font-size: 14px;
@@ -55,39 +55,37 @@ const N = {
     font-weight: 600;
     line-height: normal;
 
-  &:hover {
-    color: #0066FF; /* 호버 시 파란색 */
-    cursor: pointer;
-  }
+    &:hover {
+      color: #0066ff; /* 호버 시 파란색 */
+      cursor: pointer;
+    }
 
-  &:nth-child(3) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
+    &:nth-child(3) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
   `,
 
   HighlightText: styled.nav`
-  border-radius: 20px;
-  background: var(--Primary-500, #06F);
-  color: var(--Neutral-100, #F2F2F2);
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  padding: 10px 20px;
+    border-radius: 20px;
+    background: var(--Primary-500, #06f);
+    color: var(--Neutral-100, #f2f2f2);
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 10px 20px;
 
-  &:hover {
-    border: 2px solid var(--Neutral-100, #F2F2F2);
-    color: #F2F2F2;
-    background-color: black;
-  }
-    `,
-
+    &:hover {
+      border: 2px solid var(--Neutral-100, #f2f2f2);
+      color: #f2f2f2;
+      background-color: black;
+    }
+  `,
 };
 
 export default N;
