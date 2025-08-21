@@ -11,7 +11,6 @@ import PrintshopRegister3 from "./pages/PrintshopRegister3.jsx";
 
 export default function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chose" element={<ChosePage />} />
@@ -22,6 +21,5 @@ export default function App() {
         <Route path="/printshopRegister2" element={<PrintshopRegister2 />} />
         <Route path="/printshopRegister3" element={<PrintshopRegister3 />} />
       </Routes>
-    </BrowserRouter>
   );
 }

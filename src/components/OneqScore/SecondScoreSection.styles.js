@@ -19,7 +19,7 @@ const S = {
     width: 808px;
     flex-direction: column;
     align-items: center;
-    gap: 120px;
+    gap: 100px;
     justify-content: center;
 
   `,
@@ -38,7 +38,7 @@ const S = {
   ContentContainer: styled.div`
     display: flex;
     width: 808px;
-    height: 300px;
+    height: 400px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
