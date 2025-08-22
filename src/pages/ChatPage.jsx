@@ -1,4 +1,4 @@
-import GlobalStyle from "../App.js";
+import GlobalStyle from "../styles/GlobalStyle.js";
 import NavBarChats from "../components/Chats/NavBarChats.jsx";
 import Chat from "../components/Chats/ChatBox.jsx";
 

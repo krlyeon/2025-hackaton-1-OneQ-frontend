@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import GlobalStyle from "../App.js";
+import GlobalStyle from "../styles/GlobalStyle.js";
 import Register2 from "../components/Printshop/Register2.jsx";
 import Register22 from "../components/Printshop/Register2-2.jsx";
 import Footer from "../components/Footer.jsx";

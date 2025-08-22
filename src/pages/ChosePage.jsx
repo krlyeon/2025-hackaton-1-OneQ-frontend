@@ -1,4 +1,4 @@
-import GlobalStyle from "../App.js";
+import GlobalStyle from "../styles/GlobalStyle.js";
 import NavBarChose from "../components/Chose/NavBarChose.jsx";
 import Chose from "../components/Chose/Chose.jsx";
 
