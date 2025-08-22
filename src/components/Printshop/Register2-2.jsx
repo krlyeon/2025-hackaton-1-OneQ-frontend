@@ -105,7 +105,7 @@ function Register2_2() {
 
       console.log("Sending data to server:", JSON.stringify(requestData, null, 2));
       
-      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
+      const apiUrl = `/api/printshops/${id}/update-step2/`;
       console.log("API URL:", apiUrl);
       // Add timestamp to prevent caching
       const timestamp = new Date().getTime();

@@ -1,4 +1,4 @@
-import GlobalStyle from "../App.js";
+import GlobalStyle from "../styles/GlobalStyle.js";
 import NavBarScore from "../components/OneqScore/NavBarScore.jsx";
 import Score1 from "../components/OneqScore/FirstScoreSection.jsx";
 import Score2 from "../components/OneqScore/SecondScoreSection.jsx";

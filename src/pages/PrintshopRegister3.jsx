@@ -1,4 +1,4 @@
-import GlobalStyle from "../App.js";
+import GlobalStyle from "../styles/GlobalStyle.js";
 import Register3 from "../components/Printshop/Register3.jsx";
 import Footer from "../components/Footer.jsx";
 
