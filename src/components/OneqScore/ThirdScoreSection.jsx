@@ -1,8 +1,10 @@
 //import Background2 from "../../assets/Score/body2.svg";
 const BG_URL = new URL("../../assets/Score/body3.svg", import.meta.url).href;
 import S from "./ThirdScoreSection.styles.js"; 
+import { useNavigate } from "react-router-dom";
 
 export default function ThirdScoreSection() {
+    const navigate = useNavigate();
 
     return (
         <S.Container $bg={BG_URL}>
@@ -53,7 +55,7 @@ export default function ThirdScoreSection() {
                 </S.Content>
               </S.PrintShopContainer>
             </S.ReportContainer>
-            <S.HomeButton>홈 화면으로 돌아가기</S.HomeButton>
+            <S.HomeButton onClick={() => navigate("/")}>홈 화면으로 돌아가기</S.HomeButton>
         </S.Container2>
         </S.Container>
     );

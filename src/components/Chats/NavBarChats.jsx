@@ -25,13 +25,13 @@ const NavBarChose = () => {
   };
   const openNextConfirm = () => setIsModal2Open(true);
   const closeNextConfirm = () => setIsModal2Open(false);
-  const moveFromModal2 = () => {                            // 오른쪽 버튼 동작
-    navigate("/chose"); // ← 실제 경로 알려주면 여기만 바꾸면 끝
+  const moveFromModal2 = () => {                            
+    navigate("/score"); // ← 실제 경로 알려주면 여기만 바꾸면 끝
   };
   return (
     <C.NavBarContainer>
       <C.Left>
-        <C.BackButton onClick={handleBack}>                {/* ✅ 수정: 클릭 시 모달 오픈 */}
+        <C.BackButton onClick={handleBack}>            
           <img src={arrowBackIcon} alt="뒤로가기" />
         </C.BackButton>
       </C.Left>
@@ -62,6 +62,7 @@ const NavBarChose = () => {
       </C.Center>
       <C.Right>
         <C.GoButton onClick={openNextConfirm}>
+          원큐스코어 보러가기
           <img src={arrowRightBarIcon} alt="arrow right" />
         </C.GoButton>
       </C.Right>

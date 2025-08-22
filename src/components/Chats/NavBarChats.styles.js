@@ -54,9 +54,16 @@ export const GoButton = styled.button`
   border: none;
   cursor: pointer;
   align-items: center;
-
+  color: var(--Neutral-100, #F2F2F2);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
   display: flex;
-  padding: 4px;
+  padding: 6px;
+  padding-left: 9px;
   justify-content: center;
   align-items: center;
   gap: 2px;
