@@ -214,7 +214,7 @@ const Register2 = () => {
   const handleSave = async () => {
     const content = getCardContent(selectedOption);
     const currentData = sectionData[selectedOption] || {};
-      
+    
     // 모든 섹션에 데이터가 있는지 확인
     const requiredSections = content.type === 'three' ? ['section1', 'section2', 'section3'] : ['section1', 'section2'];
     const hasAllSections = requiredSections.every(section => 
