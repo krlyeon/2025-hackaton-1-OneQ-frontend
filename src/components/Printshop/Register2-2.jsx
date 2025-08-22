@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Content,
@@ -34,6 +35,9 @@ import leftIcon from "../../assets/Printshop/left-register.png";
 import rightIcon from "../../assets/Printshop/right-register.png";
 
 function Register2_2() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { 
     savedOptions, 
     productionTime, 
@@ -73,8 +77,84 @@ function Register2_2() {
       savedOptions.length > 0 && // Register2에서 최소 1번 저장
       productionTime.trim() && // 제작 소요 시간 입력
       deliveryMethods.length > 0 && // 배송 방법 추가
-      discountRules.length > 0 // 할인 규칙 추가
+      discountRules.length > 0 && // 할인 규칙 추가
+      !isSubmitting
     );
+  };
+
+  const handleNext = async () => {
+    if (!isNextButtonActive()) return;
+
+    try {
+      setIsSubmitting(true);
+      
+      // Prepare the request data according to API spec
+      const requestData = {
+        available_categories: savedOptions,
+        description: "고품질 인쇄 서비스를 제공합니다.",
+        production_time: productionTime,
+        delivery_options: deliveryMethods.join(', '),
+        bulk_discount: discountRules.join(', ')
+      };
+
+      console.log("Sending data to server:", JSON.stringify(requestData, null, 2));
+      
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
+      const token = localStorage.getItem('token'); // Get auth token if exists
+      
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        body: JSON.stringify(requestData),
+        credentials: 'include', // Include cookies if using session-based auth
+      });
+
+      let result;
+      try {
+        result = await response.json();
+        console.log("Server response:", result);
+      } catch (e) {
+        console.error("Failed to parse JSON response:", e);
+        throw new Error('서버 응답을 처리하는 중 오류가 발생했습니다.');
+      }
+
+      if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error(result.error || '잘못된 요청입니다. 입력값을 확인해주세요.');
+        } else if (response.status === 401) {
+          // Handle token expiration or invalid token
+          localStorage.removeItem('token');
+          throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
+        } else if (response.status === 403) {
+          throw new Error('접근 권한이 없습니다.');
+        } else if (response.status === 404) {
+          throw new Error('인쇄소를 찾을 수 없습니다.');
+        } else {
+          throw new Error(result.error || result.message || '서버 요청 중 오류가 발생했습니다.');
+        }
+      }
+
+      // 다음 단계로 이동 (3단계)
+      if (result.next_step) {
+        // Show success message before navigating
+        alert('성공적으로 저장되었습니다! 다음 단계로 이동합니다.');
+        navigate(`/printshopRegister3/${id}`);
+      }
+      
+    } catch (error) {
+      console.error('Error saving data:', error);
+      // Show more specific error messages based on error type
+      if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+        alert('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
+      } else {
+        alert(`저장 중 오류가 발생했습니다: ${error.message}`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <Container>
@@ -169,9 +249,13 @@ function Register2_2() {
           <BackIcon src={leftIcon} alt="back" />
           <BackText>뒤로</BackText>
         </BackButton>
-        <NextButton active={isNextButtonActive()}>
-          <NextText>다음</NextText>
-          <NextIcon src={rightIcon} alt="next" />
+        <NextButton 
+          active={isNextButtonActive()} 
+          onClick={handleNext}
+          disabled={!isNextButtonActive()}
+        >
+          <NextText>{isSubmitting ? '저장 중...' : '다음'}</NextText>
+          {!isSubmitting && <NextIcon src={rightIcon} alt="next" />}
         </NextButton>
       </Footer>
     </Container>

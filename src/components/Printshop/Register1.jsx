@@ -50,13 +50,13 @@ const Register1 = () => {
       address: address,
     };
 
-    // ✅ JSON 로그 찍기
-    console.log("서버로 보낼 JSON:", JSON.stringify(requestData, null, 2));
-
+    console.log("1. Step 1 - 서버로 보낼 데이터:", JSON.stringify(requestData, null, 2));
     
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE}printshops/create-step1/`, {
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/create-step1/`;
+      console.log("2. Step 1 - API URL:", apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,18 +64,33 @@ const Register1 = () => {
         body: JSON.stringify(requestData),
       });
 
-      console.log("API 응답 상태:", response.status);
+      console.log("3. Step 1 - API 응답 상태:", response.status);
+      const result = await response.json().catch(() => ({}));
+      console.log("4. Step 1 - API 응답 데이터:", result);
 
       if (!response.ok) {
-        throw new Error(`등록 중 오류가 발생했습니다. (${response.status})`);
+        const errorMessage = result.error || `등록 중 오류가 발생했습니다. (${response.status})`;
+        console.error("Step 1 - API 오류:", errorMessage);
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
-      console.log("API 응답 성공:", result);
-      localStorage.setItem("printshop_id", String(result.id));
+      if (!result || !result.id) {
+        const errorMessage = "서버로부터 유효한 응답을 받지 못했습니다.";
+        console.error("Step 1 - 유효하지 않은 응답:", result);
+        throw new Error(errorMessage);
+      }
+
+      // Store the printshop ID in both localStorage and context
+      const printshopId = String(result.id);
+      console.log("5. Step 1 - 저장할 printshop_id:", printshopId);
       
-      // 성공 시 다음 단계로 이동
-      navigate("/printshopRegister2");
+      // Store in localStorage
+      localStorage.setItem("printshop_id", printshopId);
+      console.log("6. Step 1 - localStorage에 저장 완료");
+      
+      // 성공 시 다음 단계로 이동 (URL에 printshopId 포함)
+      console.log("7. Step 1 - 다음 단계로 이동합니다.");
+      window.location.href = `/printshopRegister2/${printshopId}`;
     } catch (err) {
       console.error("API 에러:", err);
       setError(err.message || "등록 중 오류가 발생했습니다.");
