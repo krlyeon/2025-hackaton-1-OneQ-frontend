@@ -8,6 +8,7 @@ import PrintshopPage from "./pages/PrintshopPage.jsx";
 import PrintshopRegister from "./pages/PrintshopRegister.jsx";
 import PrintshopRegister2 from "./pages/PrintshopRegister2.jsx";
 import PrintshopRegister3 from "./pages/PrintshopRegister3.jsx";
+import ScorePage from "./pages/ScorePage.jsx"; // 원큐스코어 페이지
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Route path="/printshopRegister" element={<PrintshopRegister />} />
       <Route path="/printshopRegister2/:id?" element={<PrintshopRegister2 />} />
         <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
+        <Route path="/score" element={<ScorePage />} />
       </Routes>
     </PrintshopProvider>
   );
