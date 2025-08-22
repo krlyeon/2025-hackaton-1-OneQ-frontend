@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { usePrintshop } from "../../contexts/PrintshopContext";
 import {
   Container,
   Menu,
@@ -29,10 +31,15 @@ import checkedIcon from "../../assets/Printshop/checked-register.png";
 import leftIcon from "../../assets/Printshop/left-register.png";
 import passwordCheckIcon from "../../assets/Printshop/passwordcheck.png";
 
-import { useNavigate } from "react-router-dom";
-
 const Register3 = () => {
   const navigate = useNavigate();
+  const { id: paramId } = useParams();
+  const { printshopId: contextId } = usePrintshop();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Use the ID from URL params first, then fall back to context
+  const printshopId = paramId || contextId;
+  const [error, setError] = useState("");
 
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState("");
@@ -48,7 +55,72 @@ const Register3 = () => {
   const isPasswordMatch = confirmPassword === password && isPasswordValid;
 
   // 등록 버튼 활성화 조건
-  const canSubmit = file && isPasswordValid && isPasswordMatch && agree;
+  const isFormValid = file && isPasswordValid && isPasswordMatch && agree;
+  const canSubmit = isFormValid && !isSubmitting;
+
+  // 폼 제출 핸들러
+  const handleSubmit = async () => {
+    if (!isFormValid) return;
+
+    try {
+      setIsSubmitting(true);
+      setError("");
+
+      // FormData 생성
+      const formData = new FormData();
+      formData.append("password", password);
+      formData.append("password_confirm", confirmPassword);
+      formData.append("business_license", file);
+
+      if (!printshopId) {
+        throw new Error('인쇄소 ID를 찾을 수 없습니다.');
+      }
+
+      // API 호출
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/finalize/`,
+        {
+          method: "PUT",
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+          },
+          // credentials: 'include' // 쿠키 기반 인증이 필요한 경우
+        }
+      );
+
+      const contentType = response.headers.get('content-type');
+      let responseData;
+      
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(text || '서버에서 잘못된 응답을 받았습니다.');
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          responseData.error || 
+          responseData.detail ||
+          responseData.password_confirm || 
+          responseData.password?.[0] ||
+          responseData.business_license?.[0] ||
+          '등록에 실패했습니다.'
+        );
+      }
+
+      if (responseData.status === "completed") {
+        // 등록 완료 후 리다이렉트
+        navigate("/printshopPage");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Container>
@@ -103,7 +175,7 @@ const Register3 = () => {
           <div className="label">
             비밀번호 설정 <span className="required">*</span>
           </div>
-          <InputBox valid={isPasswordValid}>
+          <InputBox $isValid={isPasswordValid}>
             <InputField
               type="password"
               placeholder="인쇄소 정보 관리 시 사용할 비밀번호를 입력해주세요."
@@ -122,7 +194,7 @@ const Register3 = () => {
           <div className="label">
             비밀번호 확인 <span className="required">*</span>
           </div>
-          <InputBox valid={isPasswordMatch}>
+          <InputBox $isValid={isPasswordMatch}>
             <InputField
               type="password"
               placeholder="비밀번호를 다시 입력해주세요."
@@ -153,11 +225,19 @@ const Register3 = () => {
             marginBottom: "36px",
           }}
         >
-          <BackButton>
+          <BackButton type="button" onClick={() => window.history.back()}>
             <img src={leftIcon} alt="back" />
             뒤로
           </BackButton>
-          <SubmitButton canSubmit={canSubmit}>등록</SubmitButton>
+          <SubmitButton 
+            type="button"
+            onClick={handleSubmit}
+            disabled={!isFormValid || isSubmitting}
+            style={{ opacity: isFormValid ? 1 : 0.5 }}
+          >
+            {isSubmitting ? '처리 중...' : '등록'}
+          </SubmitButton>
+          {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
         </div>
       </MainWrapper>
     </Container>
