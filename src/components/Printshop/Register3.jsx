@@ -76,44 +76,55 @@ const Register3 = () => {
         throw new Error('인쇄소 ID를 찾을 수 없습니다.');
       }
 
-      // API 호출
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/finalize/`,
-        {
-          method: "PUT",
-          body: formData,
-          headers: {
-            'Accept': 'application/json',
-          },
-          // credentials: 'include' // 쿠키 기반 인증이 필요한 경우
-        }
-      );
+      // API 엔드포인트 확인
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/finalize/`;
+      console.log('API URL:', apiUrl);
+      console.log('Request Data:', {
+        password: password,
+        password_confirm: confirmPassword,
+        business_license: file ? file.name : 'No file'
+      });
 
+      // API 호출
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
+        // credentials: 'include' // 쿠키 기반 인증이 필요한 경우
+      });
+
+      console.log('Response Status:', response.status);
       const contentType = response.headers.get('content-type');
-      let responseData;
+      let responseData = {};
       
       if (contentType && contentType.includes('application/json')) {
         responseData = await response.json();
+        console.log('Response Data:', responseData);
       } else {
         const text = await response.text();
+        console.log('Non-JSON Response:', text);
         throw new Error(text || '서버에서 잘못된 응답을 받았습니다.');
       }
 
       if (!response.ok) {
-        throw new Error(
-          responseData.error || 
-          responseData.detail ||
-          responseData.password_confirm || 
-          responseData.password?.[0] ||
-          responseData.business_license?.[0] ||
-          '등록에 실패했습니다.'
-        );
+        const errorMsg = responseData.error || 
+                        responseData.detail ||
+                        responseData.password_confirm || 
+                        responseData.password?.[0] ||
+                        responseData.business_license?.[0] ||
+                        '등록에 실패했습니다.';
+        console.error('API Error:', errorMsg);
+        throw new Error(errorMsg);
       }
 
-      if (responseData.status === "completed") {
-        // 등록 완료 후 리다이렉트
-        navigate("/printshopPage");
-      }
+      // 성공 응답 처리
+      console.log('Registration successful, response data:', responseData);
+      
+      // 상태 확인 없이 성공 시 바로 처리 (서버 응답에 따라 조건 수정 가능)
+      alert('인쇄소 등록이 완료되었습니다! 사업자등록증 심의 후 등록이 최종 완료됩니다. (최대 3일 소요)');
+      navigate("/printshopPage");
     } catch (err) {
       console.error("Registration error:", err);
       setError(err.message);
@@ -220,22 +231,18 @@ const Register3 = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             width: "60%",
             marginBottom: "36px",
           }}
         >
-          <BackButton type="button" onClick={() => window.history.back()}>
-            <img src={leftIcon} alt="back" />
-            뒤로
-          </BackButton>
           <SubmitButton 
             type="button"
             onClick={handleSubmit}
             disabled={!isFormValid || isSubmitting}
             style={{ opacity: isFormValid ? 1 : 0.5 }}
           >
-            {isSubmitting ? '처리 중...' : '등록'}
+          
           </SubmitButton>
           {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
         </div>

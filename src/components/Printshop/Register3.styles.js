@@ -209,7 +209,7 @@ export const SubmitButton = styled.div`
   border-radius: 15px;
   justify-content: center;
   align-items: center;
-  background: ${({ canSubmit }) => (canSubmit ? "#1a1a1a" : "#808080")};
+  background: ${({ canSubmit }) => (canSubmit ? "#06F" : "#808080")};
   color: #f2f2f2;
   font-size: 20px;
   font-weight: 600;

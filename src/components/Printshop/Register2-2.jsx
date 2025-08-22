@@ -88,19 +88,14 @@ function Register2_2() {
     try {
       setIsSubmitting(true);
       
-      // Prepare the request data
+      // Prepare the request data with user inputs
       const requestData = {
-        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"],
+        equipment_list: [], // This should be managed in your component state if needed
         available_categories: savedOptions,
-        description: "고품질 인쇄 서비스를 제공합니다.",
+        description: "", // Add a description input field if needed
         production_time: productionTime,
         delivery_options: deliveryMethods.join(', '),
-        bulk_discount: discountRules.join(', '),
-        business_card_sizes: "90×54mm (표준), 85×54mm (미니), 95×60mm (대형)",
-        business_card_papers: "반누보지(고급), 휘라레지(프리미엄), 스타드림퀼츠(럭셔리), 아트지(아트감)",
-        business_card_quantities: "100부(기본), 200부, 500부, 1000부",
-        business_card_printing: "단면, 양면",
-        business_card_finishing: "형압, 박, 오시, 절취선"
+        bulk_discount: discountRules.join(', ')
       };
 
       console.log("Sending data to server:", JSON.stringify(requestData, null, 2));
@@ -185,7 +180,7 @@ function Register2_2() {
             <DeliveryList>
               <DeliveryInputWrapper>
                 {deliveryMethods.map((method, index) => (
-                  <DeliveryRow key={index} style={{marginBottom: '8px'}}>
+                  <DeliveryRow key={index} style={{marginBottom: '8px', width: '840px' }}>
                     <DeliveryInput value={method} />
                   </DeliveryRow>
                 ))}
@@ -237,14 +232,8 @@ function Register2_2() {
             </DeliveryFooter>
           </DeliveryBox>
         </Section>
-      </Content>
-
-      {/* 하단 버튼 */}
+              {/* 하단 버튼 */}
       <Footer>
-        <BackButton>
-          <BackIcon src={leftIcon} alt="back" />
-          <BackText>뒤로</BackText>
-        </BackButton>
         <NextButton 
           active={isNextButtonActive()} 
           onClick={handleNext}
@@ -254,6 +243,7 @@ function Register2_2() {
           {!isSubmitting && <NextIcon src={rightIcon} alt="next" />}
         </NextButton>
       </Footer>
+      </Content>
     </Container>
   );
 }

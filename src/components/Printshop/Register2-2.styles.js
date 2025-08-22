@@ -5,18 +5,16 @@ export const Container = styled.div`
   height: 862px;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
-  padding: 0 455px;
+  align-items: center;
+  padding: 0 223px;
 `;
 
 export const Content = styled.div`
   display: flex;
-  padding: 0 36px;
+  width: 910px;
   flex-direction: column;
   align-items: flex-start;
   gap: 48px;
-  align-self: stretch;
 `;
 
 export const Section = styled.div`
@@ -123,7 +121,6 @@ export const DeliveryInputWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  flex-shrink: 0;
 `;
 
 export const DeliveryInput = styled.input`
@@ -180,8 +177,7 @@ export const AddText = styled.div`
 
 export const Footer = styled.div`
   display: flex;
-  padding: 0 36px;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   align-self: stretch;
   margin-bottom: 20px;
