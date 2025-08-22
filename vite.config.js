@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // 백엔드 서버 주소 (예: Django, Node, Spring 등)
+        target: 'https://yumiykim.shop/api/', // 백엔드 서버 주소 (예: Django, Node, Spring 등)
         changeOrigin: true,
         secure: false,
       }

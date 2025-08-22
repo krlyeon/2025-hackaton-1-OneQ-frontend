@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import * as E from './Register2.styles';
 import { usePrintshop } from '../../contexts/PrintshopContext';
 import card from "../../assets/Printshop/card.png";
@@ -12,6 +13,8 @@ import line from "../../assets/Printshop/line.png";
 
 const Register2 = () => {
   const { setSavedOptions } = usePrintshop();
+  const { id } = useParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOption, setSelectedOption] = useState('card');
   const [localSavedOptions, setLocalSavedOptions] = useState([]);
   const [sectionData, setSectionData] = useState({});
@@ -208,7 +211,7 @@ const Register2 = () => {
     ));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const content = getCardContent(selectedOption);
     const currentData = sectionData[selectedOption] || {};
     
@@ -218,16 +221,60 @@ const Register2 = () => {
       currentData[section] && currentData[section].length > 0
     );
     
-    if (hasAllSections && minOrderQuantity.trim()) {
+    if (!hasAllSections || !minOrderQuantity.trim()) {
+      alert('모든 섹션에 데이터를 추가하고 최소 주문 수량을 입력해주세요.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      
+      // Prepare the request data
+      const requestData = {
+        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"], // 예시 장비 리스트
+        available_categories: [selectedOption],
+        description: "고품질 인쇄 서비스를 제공합니다.", // 기본 설명
+        production_time: "1-2일",
+        delivery_options: "직접수령, 택배(3,000원)",
+        bulk_discount: "100부 이상 10% 할인"
+      };
+
+      console.log("Sending data to server:", requestData);
+      
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const result = await response.json();
+      console.log("Server response:", result);
+
+      if (!response.ok) {
+        throw new Error(result.message || '서버 요청 중 오류가 발생했습니다.');
+      }
+
+      // Save to local state and context
       const newSavedOptions = localSavedOptions.includes(selectedOption) 
         ? localSavedOptions 
         : [...localSavedOptions, selectedOption];
       
       setLocalSavedOptions(newSavedOptions);
-      setSavedOptions(newSavedOptions); // Context에도 업데이트
-      alert('저장되었습니다!');
-    } else {
-      alert('모든 섹션에 데이터를 추가하고 최소 주문 수량을 입력해주세요.');
+      setSavedOptions(newSavedOptions);
+      
+      alert('성공적으로 저장되었습니다!');
+      
+      // 성공적으로 저장되었습니다.
+      // 다음 단계로 이동하지 않고, 사용자가 Register2-2 폼을 완료할 때까지 기다립니다.
+      
+    } catch (error) {
+      console.error('Error saving data:', error);
+      alert(`저장 중 오류가 발생했습니다: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

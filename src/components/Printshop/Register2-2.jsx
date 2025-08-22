@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Content,
@@ -34,6 +35,9 @@ import leftIcon from "../../assets/Printshop/left-register.png";
 import rightIcon from "../../assets/Printshop/right-register.png";
 
 function Register2_2() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { 
     savedOptions, 
     productionTime, 
@@ -73,8 +77,80 @@ function Register2_2() {
       savedOptions.length > 0 && // Register2에서 최소 1번 저장
       productionTime.trim() && // 제작 소요 시간 입력
       deliveryMethods.length > 0 && // 배송 방법 추가
-      discountRules.length > 0 // 할인 규칙 추가
+      discountRules.length > 0 && // 할인 규칙 추가
+      !isSubmitting
     );
+  };
+
+  const handleNext = async () => {
+    if (!isNextButtonActive()) return;
+
+    try {
+      setIsSubmitting(true);
+      
+      // Prepare the request data
+      const requestData = {
+        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"],
+        available_categories: savedOptions,
+        description: "고품질 인쇄 서비스를 제공합니다.",
+        production_time: productionTime,
+        delivery_options: deliveryMethods.join(', '),
+        bulk_discount: discountRules.join(', '),
+        business_card_sizes: "90×54mm (표준), 85×54mm (미니), 95×60mm (대형)",
+        business_card_papers: "반누보지(고급), 휘라레지(프리미엄), 스타드림퀼츠(럭셔리), 아트지(아트감)",
+        business_card_quantities: "100부(기본), 200부, 500부, 1000부",
+        business_card_printing: "단면, 양면",
+        business_card_finishing: "형압, 박, 오시, 절취선"
+      };
+
+      console.log("Sending data to server:", JSON.stringify(requestData, null, 2));
+      
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
+      console.log("API URL:", apiUrl);
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime();
+      const urlWithTimestamp = `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}_t=${timestamp}`;
+      
+      console.log("Final URL with timestamp:", urlWithTimestamp);
+      console.log("Request headers:", {
+        'Content-Type': 'application/json',
+      });
+      
+      const response = await fetch(urlWithTimestamp, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      let result;
+      try {
+        result = await response.json();
+        console.log("Server response:", result);
+      } catch (e) {
+        console.error("Failed to parse JSON response:", e);
+        throw new Error('서버 응답을 처리하는 중 오류가 발생했습니다.');
+      }
+
+      if (!response.ok) {
+        // Show more detailed error message from server if available
+        const errorMessage = result.detail || result.message || '서버 요청 중 오류가 발생했습니다.';
+        console.error("Server error details:", result);
+        throw new Error(errorMessage);
+      }
+
+      // 다음 단계로 이동 (3단계)
+      if (result.next_step) {
+        navigate(`/printshopRegister3/${id}`);
+      }
+      
+    } catch (error) {
+      console.error('Error saving data:', error);
+      alert(`저장 중 오류가 발생했습니다: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <Container>
@@ -169,9 +245,13 @@ function Register2_2() {
           <BackIcon src={leftIcon} alt="back" />
           <BackText>뒤로</BackText>
         </BackButton>
-        <NextButton active={isNextButtonActive()}>
-          <NextText>다음</NextText>
-          <NextIcon src={rightIcon} alt="next" />
+        <NextButton 
+          active={isNextButtonActive()} 
+          onClick={handleNext}
+          disabled={!isNextButtonActive()}
+        >
+          <NextText>{isSubmitting ? '저장 중...' : '다음'}</NextText>
+          {!isSubmitting && <NextIcon src={rightIcon} alt="next" />}
         </NextButton>
       </Footer>
     </Container>
