@@ -4,7 +4,6 @@ import { PrintshopProvider } from "./contexts/PrintshopContext";
 import Home from "./pages/Home.jsx";
 import ChosePage from "./pages/ChosePage.jsx"; // 채팅/선택 페이지
 import ChatPage from "./pages/ChatPage.jsx"; // 채팅/선택 페이지
-import ScorePage from "./pages/ScorePage.jsx";
 import PrintshopPage from "./pages/PrintshopPage.jsx";
 import PrintshopRegister from "./pages/PrintshopRegister.jsx";
 import PrintshopRegister2 from "./pages/PrintshopRegister2.jsx";
@@ -23,7 +22,6 @@ export default function App() {
       <Route path="/printshopRegister" element={<PrintshopRegister />} />
       <Route path="/printshopRegister2/:id?" element={<PrintshopRegister2 />} />
         <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
-        <Route path="/score" element={<ScorePage />} />
       </Routes>
     </PrintshopProvider>
   );
