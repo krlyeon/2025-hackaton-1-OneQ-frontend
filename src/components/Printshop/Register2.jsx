@@ -214,7 +214,7 @@ const Register2 = () => {
   const handleSave = async () => {
     const content = getCardContent(selectedOption);
     const currentData = sectionData[selectedOption] || {};
-      
+    
     // 모든 섹션에 데이터가 있는지 확인
     const requiredSections = content.type === 'three' ? ['section1', 'section2', 'section3'] : ['section1', 'section2'];
     const hasAllSections = requiredSections.every(section => 
@@ -225,121 +225,54 @@ const Register2 = () => {
       alert('모든 섹션에 데이터를 추가하고 최소 주문 수량을 입력해주세요.');
       return;
     }
-  
+
     try {
       setIsSubmitting(true);
       
-      // 선택된 카테고리에 따른 데이터 구조화
-      let categoryData = {};
-      
-      if (selectedOption === 'card') {
-        categoryData = {
-          business_card_paper_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          business_card_printing_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          business_card_finishing_options: currentData.section3?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          business_card_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      } else if (selectedOption === 'banner') {
-        categoryData = {
-          banner_size_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          banner_stand_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          banner_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      } else if (selectedOption === 'poster') {
-        categoryData = {
-          poster_paper_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          poster_coating_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          poster_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      } else if (selectedOption === 'sticker') {
-        categoryData = {
-          sticker_type_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          sticker_size_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          sticker_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      } else if (selectedOption === 'banner2') {
-        categoryData = {
-          banner_large_size_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          banner_large_processing_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          banner_large_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      } else if (selectedOption === 'brochure') {
-        categoryData = {
-          brochure_paper_options: currentData.section1?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          brochure_size_options: currentData.section2?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          brochure_folding_options: currentData.section3?.map(item => `${item.input1} - ${item.input2}`).join('\n') || '',
-          brochure_quantity_price_info: `최소주문수량: ${minOrderQuantity}`
-        };
-      }
-  
-      // Prepare request data according to API spec
+      // Prepare the request data
       const requestData = {
+        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"], // 예시 장비 리스트
         available_categories: [selectedOption],
-        description: "고품질 인쇄 서비스를 제공합니다.",
-        ...categoryData
+        description: "고품질 인쇄 서비스를 제공합니다.", // 기본 설명
+        production_time: "1-2일",
+        delivery_options: "직접수령, 택배(3,000원)",
+        bulk_discount: "100부 이상 10% 할인"
       };
-  
+
       console.log("Sending data to server:", requestData);
       
       const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
-      const token = localStorage.getItem('token');
-      
       const response = await fetch(apiUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify(requestData),
-        credentials: 'include',
       });
 
       const result = await response.json();
       console.log("Server response:", result);
 
       if (!response.ok) {
-        if (response.status === 400) {
-          throw new Error(result.error || '잘못된 요청입니다. 입력값을 확인해주세요.');
-        } else if (response.status === 401) {
-          localStorage.removeItem('token');
-          throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
-        } else if (response.status === 403) {
-          throw new Error('접근 권한이 없습니다.');
-        } else if (response.status === 404) {
-          throw new Error('인쇄소를 찾을 수 없습니다.');
-        } else {
-          throw new Error(result.error || result.message || '서버 요청 중 오류가 발생했습니다.');
-        }
+        throw new Error(result.message || '서버 요청 중 오류가 발생했습니다.');
       }
 
-      // Handle successful response
-      if (result.next_step) {
-        // Save to local state and context
-        const newSavedOptions = localSavedOptions.includes(selectedOption) 
-          ? localSavedOptions 
-          : [...localSavedOptions, selectedOption];
-        
-        setLocalSavedOptions(newSavedOptions);
-        setSavedOptions(newSavedOptions);
-        
-        // Show success message
-        alert('성공적으로 저장되었습니다!');
-        
-        // If there's a next step, you can navigate to it
-        if (result.next_step === 'step3') {
-          // Uncomment and update the navigation path as needed
-          // navigate(`/printshops/${id}/register/step3`);
-        }
-      }
-    
+      // Save to local state and context
+      const newSavedOptions = localSavedOptions.includes(selectedOption) 
+        ? localSavedOptions 
+        : [...localSavedOptions, selectedOption];
+      
+      setLocalSavedOptions(newSavedOptions);
+      setSavedOptions(newSavedOptions);
+      
+      alert('성공적으로 저장되었습니다!');
+      
+      // 성공적으로 저장되었습니다.
+      // 다음 단계로 이동하지 않고, 사용자가 Register2-2 폼을 완료할 때까지 기다립니다.
+      
     } catch (error) {
       console.error('Error saving data:', error);
-      // Show more specific error messages based on error type
-      if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-        alert('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
-      } else {
-        alert(`저장 중 오류가 발생했습니다: ${error.message}`);
-      }
+      alert(`저장 중 오류가 발생했습니다: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }

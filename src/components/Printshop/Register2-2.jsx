@@ -88,28 +88,40 @@ function Register2_2() {
     try {
       setIsSubmitting(true);
       
-      // Prepare the request data according to API spec
+      // Prepare the request data
       const requestData = {
+        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"],
         available_categories: savedOptions,
         description: "고품질 인쇄 서비스를 제공합니다.",
         production_time: productionTime,
         delivery_options: deliveryMethods.join(', '),
-        bulk_discount: discountRules.join(', ')
+        bulk_discount: discountRules.join(', '),
+        business_card_sizes: "90×54mm (표준), 85×54mm (미니), 95×60mm (대형)",
+        business_card_papers: "반누보지(고급), 휘라레지(프리미엄), 스타드림퀼츠(럭셔리), 아트지(아트감)",
+        business_card_quantities: "100부(기본), 200부, 500부, 1000부",
+        business_card_printing: "단면, 양면",
+        business_card_finishing: "형압, 박, 오시, 절취선"
       };
 
       console.log("Sending data to server:", JSON.stringify(requestData, null, 2));
       
       const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${id}/update-step2/`;
-      const token = localStorage.getItem('token'); // Get auth token if exists
+      console.log("API URL:", apiUrl);
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime();
+      const urlWithTimestamp = `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}_t=${timestamp}`;
       
-      const response = await fetch(apiUrl, {
+      console.log("Final URL with timestamp:", urlWithTimestamp);
+      console.log("Request headers:", {
+        'Content-Type': 'application/json',
+      });
+      
+      const response = await fetch(urlWithTimestamp, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify(requestData),
-        credentials: 'include', // Include cookies if using session-based auth
       });
 
       let result;
@@ -122,36 +134,20 @@ function Register2_2() {
       }
 
       if (!response.ok) {
-        if (response.status === 400) {
-          throw new Error(result.error || '잘못된 요청입니다. 입력값을 확인해주세요.');
-        } else if (response.status === 401) {
-          // Handle token expiration or invalid token
-          localStorage.removeItem('token');
-          throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
-        } else if (response.status === 403) {
-          throw new Error('접근 권한이 없습니다.');
-        } else if (response.status === 404) {
-          throw new Error('인쇄소를 찾을 수 없습니다.');
-        } else {
-          throw new Error(result.error || result.message || '서버 요청 중 오류가 발생했습니다.');
-        }
+        // Show more detailed error message from server if available
+        const errorMessage = result.detail || result.message || '서버 요청 중 오류가 발생했습니다.';
+        console.error("Server error details:", result);
+        throw new Error(errorMessage);
       }
 
       // 다음 단계로 이동 (3단계)
       if (result.next_step) {
-        // Show success message before navigating
-        alert('성공적으로 저장되었습니다! 다음 단계로 이동합니다.');
         navigate(`/printshopRegister3/${id}`);
       }
       
     } catch (error) {
       console.error('Error saving data:', error);
-      // Show more specific error messages based on error type
-      if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-        alert('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
-      } else {
-        alert(`저장 중 오류가 발생했습니다: ${error.message}`);
-      }
+      alert(`저장 중 오류가 발생했습니다: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
