@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import * as E from './Register2.styles';
 import { usePrintshop } from '../../contexts/PrintshopContext';
 import card from "../../assets/Printshop/card.png";
@@ -12,6 +12,7 @@ import plus from "../../assets/Printshop/plus.png";
 import line from "../../assets/Printshop/line.png";
 
 const Register2 = () => {
+  const navigate = useNavigate();
   const { setSavedOptions } = usePrintshop();
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -229,15 +230,51 @@ const Register2 = () => {
     try {
       setIsSubmitting(true);
       
-      // Prepare the request data
+      // Prepare the base request data
       const requestData = {
-        equipment_list: ["디지털 프린터", "형압기", "절단기", "라미네이터"], // 예시 장비 리스트
         available_categories: [selectedOption],
-        description: "고품질 인쇄 서비스를 제공합니다.", // 기본 설명
-        production_time: "1-2일",
-        delivery_options: "직접수령, 택배(3,000원)",
-        bulk_discount: "100부 이상 10% 할인"
+        [`${selectedOption}_quantity_price_info`]: minOrderQuantity.trim()
       };
+
+      // Map section data to the appropriate API fields based on the selected option
+      const sectionMappings = {
+        'card': {
+          'section1': 'business_card_paper_options',
+          'section2': 'business_card_printing_options',
+          'section3': 'business_card_finishing_options'
+        },
+        'banner': {
+          'section1': 'banner_size_options',
+          'section2': 'banner_stand_options'
+        },
+        'poster': {
+          'section1': 'poster_paper_options',
+          'section2': 'poster_coating_options'
+        },
+        'sticker': {
+          'section1': 'sticker_type_options',
+          'section2': 'sticker_size_options'
+        },
+        'banner2': {
+          'section1': 'banner_large_size_options',
+          'section2': 'banner_large_processing_options'
+        },
+        'brochure': {
+          'section1': 'brochure_paper_options',
+          'section2': 'brochure_size_options',
+          'section3': 'brochure_folding_options'
+        }
+      };
+
+      // Process each section and add to request data
+      Object.entries(sectionMappings[selectedOption]).forEach(([sectionKey, apiKey]) => {
+        if (currentData[sectionKey]) {
+          // Join input1 and input2 with comma for each row, then join all rows with commas
+          requestData[apiKey] = currentData[sectionKey]
+            .map(row => `${row.input1}, ${row.input2}`)
+            .join(', ');
+        }
+      });
 
       console.log("Sending data to server:", requestData);
       
@@ -267,9 +304,6 @@ const Register2 = () => {
       
       alert('성공적으로 저장되었습니다!');
       
-      // 성공적으로 저장되었습니다.
-      // 다음 단계로 이동하지 않고, 사용자가 Register2-2 폼을 완료할 때까지 기다립니다.
-      
     } catch (error) {
       console.error('Error saving data:', error);
       alert(`저장 중 오류가 발생했습니다: ${error.message}`);
@@ -284,7 +318,7 @@ const Register2 = () => {
       <E.Menu>
         <E.MenuInner>
           <E.TopBar>
-            <E.CancelBtn>취소하기</E.CancelBtn>
+            <E.CancelBtn onClick={() => navigate('/printshopPage')}>취소하기</E.CancelBtn>
             <E.Title>인쇄소 등록 [2/3]</E.Title>
             <E.StepBox>
             </E.StepBox>
@@ -511,12 +545,12 @@ const Register2 = () => {
               }
             })()}
 
-            {/* 최소 주문 수량 & 버튼 */}
+            {/* 수량 및 가격 정보 & 버튼 */}
             <E.Footer>
               <E.MinOrder>
-                <E.FormLabel>최소 주문 수량</E.FormLabel>
+                <E.FormLabel>수량 및 가격 정보</E.FormLabel>
                 <E.MinOrderInput 
-                placeholder="예: 1개" 
+                placeholder="예: 1개당 100원" 
                 value={minOrderQuantity}
                 onChange={(e) => setMinOrderQuantity(e.target.value)}
               />

@@ -48,6 +48,7 @@ const Register1 = () => {
       email: email || "",
       business_hours: time,
       address: address,
+      description: description || ""
     };
 
     console.log("1. Step 1 - 서버로 보낼 데이터:", JSON.stringify(requestData, null, 2));

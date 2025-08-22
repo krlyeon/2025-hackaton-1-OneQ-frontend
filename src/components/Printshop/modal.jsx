@@ -1,56 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Overlay,
   ModalBox,
-  HeaderSection,
+  ModalHeader,
   CloseWrapper,
   CloseIcon,
-  TitleSection,
+  ModalContent,
+  TextContainer,
   TitleText,
   SubText,
-  ContentSection,
+  InputSection,
+  InputField,
   InputWrapper,
-  InputBox,
   PasswordInput,
-  ActionWrapper,
-  SubmitButton,
+  ButtonContainer,
+  StyledSubmitButton,
   SubmitIcon,
 } from "./modal.styles";
+import useModal from "../../hooks/useModal";
 
 import closeIcon from "../../assets/Printshop/close.png";
 import rightArrow from "../../assets/Printshop/right-register.png";
 
 function Modal() {
+  const [password, setPassword] = useState("");
+  const { isOpen, closeModal } = useModal(true);
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password.length < 4) return;
+    console.log("Password submitted:", password);
+  };
+
+  if (!isOpen) return null;
+
   return (
     <Overlay>
       <ModalBox>
-        {/* 상단 */}
-        <HeaderSection>
-          <CloseWrapper>
+        <ModalHeader>
+          <CloseWrapper onClick={closeModal}>
             <CloseIcon src={closeIcon} alt="close" />
           </CloseWrapper>
-        </HeaderSection>
+        </ModalHeader>
 
-        {/* 타이틀 영역 */}
-        <TitleSection>
-          <TitleText>인증이 필요합니다.</TitleText>
-          <SubText>열람하거나 수정하려면 비밀번호를 입력하세요.</SubText>
-        </TitleSection>
+        <ModalContent>
+          <TextContainer>
+            <TitleText>인증이 필요합니다.</TitleText>
+            <SubText>열람하거나 수정하려면 비밀번호를 입력하세요.</SubText>
+          </TextContainer>
 
-        {/* 비밀번호 입력 + 버튼 */}
-        <ContentSection>
-          <InputWrapper>
-            <InputBox>
-              <PasswordInput type="password" />
-            </InputBox>
-          </InputWrapper>
-
-          <ActionWrapper>
-            <SubmitButton>
-              <SubmitIcon src={rightArrow} alt="submit" />
-            </SubmitButton>
-          </ActionWrapper>
-        </ContentSection>
+          <InputSection>
+            <InputField>
+              <InputWrapper>
+                <PasswordInput 
+                  type="password" 
+                  placeholder="비밀번호 입력"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </InputWrapper>
+            </InputField>
+            <ButtonContainer>
+              <StyledSubmitButton 
+                onClick={handleSubmit} 
+                $active={password.length >= 4}
+              >
+                <SubmitIcon src={rightArrow} alt="submit" />
+              </StyledSubmitButton>
+            </ButtonContainer>
+          </InputSection>
+        </ModalContent>
       </ModalBox>
     </Overlay>
   );
