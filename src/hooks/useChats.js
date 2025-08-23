@@ -63,7 +63,7 @@ function buildQuoteOnlyText(fq) {
   return L.join("\n");
 }
 
-// 추천 인쇄소 TOP3 텍스트 구성
+// 추천 인쇄소 TOP3 텍스트 구성 (FIX)
 function buildRecommendationsText(fq) {
   const recs = Array.isArray(fq?.recommendations) ? fq.recommendations : [];
   if (!recs.length) return "";
@@ -74,18 +74,35 @@ function buildRecommendationsText(fq) {
     "------------------------------",
     ...top.map((r, i) => {
       const parts = [];
-      parts.push(`${i + 1}위. ${r.printshop_name || "-"}` + (r.is_verified ? " (인증)" : ""));
+
+      // 이름 + 인증표시
+      const name = r.printshop_name || r.shop_name || "-";
+      parts.push(`${i + 1}위. ${name}` + (r.is_verified ? " (인증)" : ""));
+
+      // 점수/이유
       if (r.recommendation_score != null) parts.push(`   추천 점수: ${r.recommendation_score}점`);
-      if (r.recommendation_reason)      parts.push(`   추천 이유: ${r.recommendation_reason}`);
-      if (r.printshop_phone)            parts.push(`   연락처: ${r.printshop_phone}`);
-      if (r.total_price != null)        parts.push(`   총액: ${toKR(r.total_price)}원`);
-      if (r.production_time)            parts.push(`   제작기간: ${r.production_time}`);
-      if (r.delivery_options)           parts.push(`   배송: ${r.delivery_options}`);
+      if (r.recommendation_reason)        parts.push(`   추천 이유: ${r.recommendation_reason}`);
+
+      // 연락처/주소/이메일 (폴백까지)
+      const phone   = r.printshop_phone   || r.phone;
+      const address = r.printshop_address || r.address;
+      const email   = r.printshop_email   || r.email;
+      if (phone)   parts.push(`   연락처: ${phone}`);
+      if (address) parts.push(`   주소: ${address}`);
+      if (email)   parts.push(`   이메일: ${email}`);
+
+      // 기타 정보
+      if (r.total_price != null)  parts.push(`   총액: ${toKR(r.total_price)}원`);
+      if (r.production_time)      parts.push(`   제작기간: ${r.production_time}`);
+      if (r.delivery_options)     parts.push(`   배송: ${r.delivery_options}`);
+
       return parts.join("\n");
-    })
+    }),
   ];
+
   return lines.join("\n");
 }
+
 
 // 메시지/슬롯로 “견적 생성 가능” 시점 감지 (백업 트리거)
 function shouldTriggerQuote(resp) {
