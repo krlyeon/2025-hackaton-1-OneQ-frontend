@@ -19,7 +19,7 @@ const S = {
     width: 808px;
     flex-direction: column;
     align-items: center;
-    gap: 100px;
+    gap: 80px;
     justify-content: center;
 
   `,
@@ -39,6 +39,11 @@ const S = {
     display: flex;
     width: 808px;
     height: 400px;
+    position: relative;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE, Edge */
+    overflow-y: scroll;
+    overflow-x: hidden;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -46,6 +51,10 @@ const S = {
     border-radius: 20px;
     border: 2px solid var(--Neutral-300, #BFBFBF);
     box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.30);
+
+    &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
   `,
 
   Header: styled.div`
@@ -85,6 +94,18 @@ const S = {
     font-weight: 600;
     line-height: 150%; /* 30px */
   `,
+
+  pre: styled.div`
+    color: var(--Neutral-500, #4D4D4D);
+    white-space: pre-wrap;
+    font-family: Pretendard;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 30px */
+    margin: 0;
+  `,
+
 
   };
 
