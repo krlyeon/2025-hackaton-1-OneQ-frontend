@@ -92,10 +92,11 @@ const S = {
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
+    padding-top: 55px;
     line-height: 150%; /* 30px */
   `,
 
-  pre: styled.div`
+  pre: styled.p`
     color: var(--Neutral-500, #4D4D4D);
     white-space: pre-wrap;
     font-family: Pretendard;

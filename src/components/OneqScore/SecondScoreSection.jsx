@@ -4,10 +4,9 @@ import React, { useEffect, useState } from "react";
 const BG_URL = new URL("../../assets/Score/body2.svg", import.meta.url).href;
 import S from "./SecondScoreSection.styles.js";
 
-// /api 기본값을 두고, 끝 슬래시는 제거
 const API_BASE = (import.meta.env?.VITE_API_BASE ?? "/api").replace(/\/$/, "");
 
-// URL 쿼리/로컬에서 session_id 확보
+
 const SESSION_KEY = "oneq_server_session_id";
 function getParam(name) {
   try { return new URLSearchParams(window.location.search).get(name); }
@@ -27,7 +26,7 @@ function toKR(v) {
   return Number.isFinite(n) ? n.toLocaleString("ko-KR") : String(v ?? "-");
 }
 
-// 추천 인쇄소( recommendations )를 완전히 제외한 텍스트 포맷터
+
 function buildQuoteWithoutRecs(fq) {
   if (!fq) return "";
   const {
@@ -40,23 +39,25 @@ function buildQuoteWithoutRecs(fq) {
     slots = {},
   } = fq;
 
-  // slots 우선, 없으면 order_summary로 대체
+
   const quantity = slots.quantity ?? order_summary.quantity ?? "-";
   const size = slots.size ?? order_summary.size ?? "-";
   const paper = slots.paper ?? order_summary.paper ?? "-";
   const coating = slots.coating ?? order_summary.coating ?? "-";
-  const due = slots.due_days ? `${slots.due_days}일` : (order_summary.due_days ?? "-");
+  const due = slots.due_days ? `${slots.due_days}` : (order_summary.due_days ?? "-");
   const budget =
     slots.budget != null
-      ? `${toKR(slots.budget)}원`
+      ? `${toKR(slots.budget)}`
       : (order_summary.budget ?? "-");
   const region = order_summary.region ?? "-";
 
   return [
     `견적번호  : ${quote_number || "-"}`,
-    `생성일    : ${created_date || "-"}`,
+    `/ 생성일    : ${created_date || "-"}`,
+
     "",
-    "[주문 정보]",
+    `───────────────── [주문 정보] ────────────────`,
+    `• 카테고리 : ${category}`,
     `• 수량     : ${/부$/.test(String(quantity)) || quantity === "-" ? quantity : `${quantity}부`}`,
     `• 사이즈   : ${size}`,
     `• 용지     : ${paper}`,
@@ -64,8 +65,9 @@ function buildQuoteWithoutRecs(fq) {
     `• 납기     : ${due}`,
     `• 예산     : ${budget}`,
     `• 지역     : ${region}`,
-    "",
-    "[요약]",
+    
+    ``,
+    `────────────────── [요약] ──────────────────`,
     total_available != null ? `• 견적 가능 인쇄소 : ${total_available}곳` : null,
     price_range ? `• 가격대 : ${price_range}` : null,
   ]
