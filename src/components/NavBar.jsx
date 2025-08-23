@@ -12,7 +12,7 @@ export default function NavBar() {
                 <N.NavMenu>
                     <N.NavItem>Home</N.NavItem>
                     <N.NavItem onClick={() => navigate("/printshopPage")}>인쇄소 등록</N.NavItem>
-                    <N.NavItem><N.HighlightText onClick={() => navigate("/score")}>견적 받기</N.HighlightText></N.NavItem>
+                    <N.NavItem><N.HighlightText onClick={() => navigate("/chose")}>견적 받기</N.HighlightText></N.NavItem>
                 </N.NavMenu>
             </N.NavContainer>
         </N.Header>

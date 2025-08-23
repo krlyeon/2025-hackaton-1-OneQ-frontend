@@ -1,4 +1,5 @@
 // src/sections/ThirdScoreSection/index.jsx
+
 // 추천 인쇄소 Top3 카드: 이메일/전화/주소 + 점수(가격/납기/작업) + 총합(가중합)
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,22 @@ const SESSION_KEY = "oneq_server_session_id";
 
 // 가중치 최대치: 가격 40, 납기 30, 작업 30
 const MAXS = { price: 40, due: 30, work: 30 };
+
+
+function scaleReasonToWeighted(parsed) {
+  const out = { ...parsed };
+  if (Number.isFinite(out.price) && out.price > MAXS.price) {
+    out.price = Math.round((out.price * MAXS.price) / 100);
+  }
+  if (Number.isFinite(out.due) && out.due > MAXS.due) {
+    out.due = Math.round((out.due * MAXS.due) / 100);
+  }
+  if (Number.isFinite(out.work) && out.work > MAXS.work) {
+    out.work = Math.round((out.work * MAXS.work) / 100);
+  }
+  return out;
+}
+
 
 function getParam(name) {
   try { return new URLSearchParams(window.location.search).get(name); }
@@ -24,7 +41,6 @@ function getSessionId() {
   return localStorage.getItem(SESSION_KEY);
 }
 
-// "가격 35 / 납기 28 / 작업 22" → {price:35, due:28, work:22}
 function parseReason(reason = "") {
   const pick = (re) => {
     const m = re.exec(reason);
@@ -49,32 +65,39 @@ function toWeightedPoints(scores = {}) {
   };
 }
 
-// 백엔드 shop 객체 → 화면에 필요한 필드로 정규화
+//정규화
 function normalizeShop(shop) {
-  // 연락처/주소
+
+  
   const email   = shop.printshop_email   || shop.email   || "-";
   const phone   = shop.printshop_phone   || shop.phone   || "-";
   const address = shop.printshop_address || shop.address || "-";
 
-  // 점수: 1순위 recommendation_reason(이미 환산), 2순위 scores(0~100 → 환산)
+  // 점수
   const parsed = parseReason(shop.recommendation_reason || "");
   const parsedOK = [parsed.price, parsed.due, parsed.work].every(v => Number.isFinite(v));
-  const weighted = parsedOK ? parsed : toWeightedPoints(shop.scores || {});
+
+  // 1순위: reason에서 뽑은 값 사용 (필요하면 40/30/30으로 환산)
+  // 2순위: scores(0~100) → 40/30/30으로 환산
+  const weighted = parsedOK
+    ? scaleReasonToWeighted(parsed)
+    : toWeightedPoints(shop.scores || {});
+
   const hasAllWeighted = [weighted.price, weighted.due, weighted.work].every(v => Number.isFinite(v));
 
   const total = hasAllWeighted
-    ? weighted.price + weighted.due + weighted.work // 최대 100
+    ? (weighted.price + weighted.due + weighted.work)             // 0~100 (= 40+30+30)
     : (Number.isFinite(shop.recommendation_score) ? Math.round(shop.recommendation_score) : null);
 
   return {
     name: shop.printshop_name || shop.shop_name || "-",
     email, phone, address,
-    points: weighted,         // {price,due,work} = 가중 환산 점수
-    total,                    // 총합(가중합)
+    points: weighted, 
+    total,          
     verified: !!shop.is_verified,
     rankKey: Number.isFinite(shop?.scores?.oneq_total)
       ? Number(shop.scores.oneq_total)
-      : (Number.isFinite(total) ? total : -1), // 정렬용
+      : (Number.isFinite(total) ? total : -1),
   };
 }
 
@@ -89,6 +112,7 @@ export default function ThirdScoreSection() {
       catch { return []; }
     })();
     if (Array.isArray(local) && local.length) {
+
       setShopsRaw(local.slice(0, 3));
       return;
     }

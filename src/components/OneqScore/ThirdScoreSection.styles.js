@@ -157,7 +157,7 @@ const S = {
     flex: 1 0 0;
     color: var(--Neutral-100, #F2F2F2);
     font-family: Pretendard;
-    font-size: 32px;
+    font-size: 27px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -282,6 +282,7 @@ const S = {
     line-height: normal;
     border-radius: 20px;
     background: var(--Primary-500, #06F);
+    cursor: pointer;
   `,
 };
 
