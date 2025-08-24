@@ -9,7 +9,6 @@ import PrintshopPage from "./pages/PrintshopPage.jsx";
 import PrintshopRegister from "./pages/PrintshopRegister.jsx";
 import PrintshopRegister2 from "./pages/PrintshopRegister2.jsx";
 import PrintshopRegister3 from "./pages/PrintshopRegister3.jsx";
-import ScorePage from "./pages/ScorePage.jsx";
 
 console.log("App ScorePage binding =", ScorePage);
 
