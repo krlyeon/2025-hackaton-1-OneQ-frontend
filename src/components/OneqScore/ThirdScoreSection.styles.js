@@ -119,6 +119,7 @@ const S = {
     padding: 0 53.16px;
     align-items: center;
     gap: 32px;
+    justify-content: center;
   `,
 
   Content: styled.article`
@@ -139,7 +140,7 @@ const S = {
     align-self: stretch;
     color: var(--Neutral-400, #808080);
     font-family: Pretendard;
-    font-size: 18px;
+    font-size: 17px;
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
