@@ -102,25 +102,34 @@ export const DeliveryBox = styled.div`
   border-radius: 10px;
   border: 1px solid var(--Neutral-300, #bfbfbf);
   background: var(--Neutral-200, #d9d9d9);
+  height: 165px; /* Fixed height to match Register2 */
+  overflow: hidden;
 `;
 
 export const DeliveryList = styled.div`
   display: flex;
-  height: 132px;
   flex-direction: column;
   align-items: flex-start;
-  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 60px; /* Space for the input area */
+  box-sizing: border-box;
+  position: relative;
 `;
 
 export const DeliveryInputWrapper = styled.div`
-  display: flex;
-  width: 890px;
-  height: 122px;
-  max-height: 122px;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
   padding: 12px 10px;
+  background: var(--Neutral-200, #d9d9d9);
+  border-top: 1px solid var(--Neutral-300, #bfbfbf);
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
+  z-index: 1;
 `;
 
 export const DeliveryInput = styled.input`

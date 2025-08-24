@@ -63,7 +63,6 @@ function Modal({ isOpen, onClose, printshop: selectedPrintshop }) {
       
       if (data.message === "비밀번호가 확인되었습니다.") {
         setIsVerified(true);
-        alert("확인되었습니다");
         // Redirect to edit mode with the printshop ID
         window.location.href = `/printshopRegister?edit=true&id=${selectedPrintshop.id}`;
       } else {
