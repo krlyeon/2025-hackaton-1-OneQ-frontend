@@ -14,6 +14,7 @@ const PrintshopList = () => {
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPrintshop, setSelectedPrintshop] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 7; // 한 페이지당 표시할 항목 수
   const { isOpen, openModal, closeModal } = useModal();
   
@@ -186,7 +187,7 @@ const PrintshopList = () => {
                   <L.EditButton 
                     onClick={() => {
                       setSelectedPrintshop(printshop);
-                      openModal();
+                      setIsModalOpen(true);
                     }}
                   >
                     수정하기
@@ -195,7 +196,7 @@ const PrintshopList = () => {
               ))
             ) : (
               <L.TableRow>
-                <L.CellNo colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                <L.CellNo colSpan="5" style={{ textAlign: 'center', padding: '50px', justifyContent: 'center', alignItems: 'center', whiteSpace: 'nowrap', marginLeft: '510px' }}>
                   검색 결과가 없습니다.
                 </L.CellNo>
               </L.TableRow>
@@ -224,13 +225,11 @@ const PrintshopList = () => {
           </L.Pagination>
         )}
       </L.InnerWrapper>
-      {isOpen && (
-        <Modal 
-          isOpen={isOpen} 
-          onClose={closeModal}
-          printshop={selectedPrintshop}
-        />
-      )}
+      <Modal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        printshop={selectedPrintshop}
+      />
     </L.Container>
   );
 };

@@ -160,12 +160,29 @@ export const NextButton = styled.button`
   cursor: pointer;
   border: none;
   align-items: center;
+  color: #f2f2f2;
+  font-size: 20px;
+  font-weight: 600;
 `;
 
 export const NextText = styled.span`
   color: #f2f2f2;
   font-size: 20px;
   font-weight: 600;
+`;
+
+export const RegisterButton = styled.button`
+  border: none;
+  background: transparent;
+  color: #f2f2f2;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 `;
 
 export const NextIcon = styled.img`

@@ -10,6 +10,7 @@ export const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);  
 `;
 
 export const ModalBox = styled.div`
@@ -150,17 +151,35 @@ export const StyledSubmitButton = styled.button`
   align-items: center;
   gap: 2px;
   border-radius: 10px;
-  background: ${props => props.$active ? 'var(--Primary-500, #06F)' : 'var(--Neutral-400, #808080)'};
+  background: ${props => 
+    props.$verified ? 'var(--Primary-500, #06F)' : 
+    props.$active ? 'var(--Primary-500, #06F)' : 'var(--Neutral-400, #808080)'};
   width: 35px;
   height: 33px;
   border: none;
-  cursor: ${props => props.$active ? 'pointer' : 'not-allowed'};
-  transition: background 0.2s ease;
+  cursor: ${props => (props.$active && !props.disabled) ? 'pointer' : 'not-allowed'};
+  opacity: ${props => props.disabled ? 0.7 : 1};
+  transition: all 0.2s ease;
 `;
 
 export const SubmitIcon = styled.img`
   width: 20px;
   height: 25px;
   aspect-ratio: 1/1;
+`;
+
+export const ErrorMessage = styled.p`
+  color: #FF3333;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 8px 0 0 0;
+  text-align: center;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
 `;
 

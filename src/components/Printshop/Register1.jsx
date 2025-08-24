@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import * as R from "./Register1.styles";
 import RightRegister from "../../assets/Printshop/right-register.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Modal3 from "../Common/Modal3";
+import Modal4 from "../Common/Modal4";
+import Modal7 from "../Common/Modal7";
 
 const Register1 = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEditMode = searchParams.get('edit') === 'true';
+  const printshopId = searchParams.get('id');
 
   // 필수 입력값 state
   const [printShopName, setPrintShopName] = useState("");
@@ -20,6 +26,11 @@ const Register1 = () => {
 
   // 버튼 활성화 여부
   const [isActive, setIsActive] = useState(false);
+  
+  // 모달 표시 상태
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [nextUrl, setNextUrl] = useState("");
 
   useEffect(() => {
     // 개발 중에만 찍어봐
@@ -33,6 +44,31 @@ const Register1 = () => {
       setIsActive(false);
     }
   }, [printShopName, phone, address, time]);
+
+  // 기존 데이터 로드
+  useEffect(() => {
+    const fetchPrintshopData = async () => {
+      if (!isEditMode || !printshopId) return;
+      
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE}printshops/${printshopId}/`);
+        if (!response.ok) throw new Error('Failed to fetch printshop data');
+        
+        const data = await response.json();
+        setPrintShopName(data.name || '');
+        setPhone(data.phone || '');
+        setAddress(data.address || '');
+        setTime(data.business_hours || '');
+        setEmail(data.email || '');
+        setDescription(data.description || '');
+      } catch (error) {
+        console.error('Error fetching printshop data:', error);
+        alert('인쇄소 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+
+    fetchPrintshopData();
+  }, [isEditMode, printshopId]);
 
   // API 호출 함수
   const handleSubmit = async () => {
@@ -54,60 +90,126 @@ const Register1 = () => {
     console.log("1. Step 1 - 서버로 보낼 데이터:", JSON.stringify(requestData, null, 2));
     
     try {
-      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/create-step1/`;
-      console.log("2. Step 1 - API URL:", apiUrl);
+      const apiUrl = isEditMode 
+        ? `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/update/`  // Use update endpoint for edits
+        : `${import.meta.env.VITE_API_BASE}printshops/create-step1/`;
+        
+      console.log("2. Step 1 - API Request:", {
+        url: apiUrl,
+        method: isEditMode ? "PATCH" : "POST",
+        body: requestData,
+        isEditMode,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
       const response = await fetch(apiUrl, {
-        method: "POST",
+        method: isEditMode ? "PATCH" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestData),
       });
 
-      console.log("3. Step 1 - API 응답 상태:", response.status);
-      const result = await response.json().catch(() => ({}));
-      console.log("4. Step 1 - API 응답 데이터:", result);
+      let result;
+      try {
+        result = await response.json();
+      } catch (e) {
+        console.error("Failed to parse JSON response:", e);
+        result = {};
+      }
+
+      console.log("3. Step 1 - API Response:", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        data: result
+      });
 
       if (!response.ok) {
-        const errorMessage = result.error || `등록 중 오류가 발생했습니다. (${response.status})`;
+        const errorMessage = result.detail || result.message || 
+          `등록 중 오류가 발생했습니다. (${response.status} ${response.statusText})`;
         console.error("Step 1 - API 오류:", errorMessage);
         throw new Error(errorMessage);
       }
 
-      if (!result || !result.id) {
-        const errorMessage = "서버로부터 유효한 응답을 받지 못했습니다.";
-        console.error("Step 1 - 유효하지 않은 응답:", result);
-        throw new Error(errorMessage);
+      // Handle response for both edit and create modes
+      let id;
+      if (isEditMode) {
+        id = printshopId;
+      } else {
+        // For create mode, try to get ID from different possible response formats
+        id = result?.id || result?.data?.id || null;
+        if (!id) {
+          console.error("Step 1 - 서버 응답에서 ID를 찾을 수 없습니다:", result);
+          throw new Error("서버 응답에서 인쇄소 ID를 가져오지 못했습니다.");
+        }
+        id = String(id);
+        
+        // Store in localStorage for new registrations
+        localStorage.setItem("printshop_id", id);
       }
 
-      // Store the printshop ID in both localStorage and context
-      const printshopId = String(result.id);
-      console.log("5. Step 1 - 저장할 printshop_id:", printshopId);
+      console.log("5. Step 1 - 처리된 printshop_id:", id);
+      console.log("6. Step 1 - 응답 데이터:", result);
       
-      // Store in localStorage
-      localStorage.setItem("printshop_id", printshopId);
-      console.log("6. Step 1 - localStorage에 저장 완료");
+      // Set next step URL
+      const nextStepUrl = `/printshopRegister2/${id}${isEditMode ? '?edit=true' : ''}`;
+      console.log("7. Step 1 - 다음 단계 URL이 설정되었습니다.", {
+        id,
+        isEditMode,
+        nextUrl: nextStepUrl,
+        response: result
+      });
       
-      // 성공 시 다음 단계로 이동 (URL에 printshopId 포함)
-      console.log("7. Step 1 - 다음 단계로 이동합니다.");
-      window.location.href = `/printshopRegister2/${printshopId}`;
+      if (isEditMode) {
+        // 수정 모드일 경우 Modal7 표시
+        setNextUrl(nextStepUrl);
+        setShowSaveModal(true);
+      } else {
+        // 일반 등록 모드일 경우 바로 이동
+        window.location.href = nextStepUrl;
+      }
     } catch (err) {
       console.error("API 에러:", err);
-      setError(err.message || "등록 중 오류가 발생했습니다.");
+      const errorMessage = err.response?.data?.message || err.message || "등록 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      alert(`저장에 실패했습니다: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <R.Container>
-      {/* 네브바 */}
-      <R.Header>
-        <R.HeaderMenu>
-          <R.CancelButton onClick={() => navigate("/printshopPage")}>
-            <R.CancelText>취소하기</R.CancelText>
-          </R.CancelButton>
+    <>
+      {showCancelModal && (
+        isEditMode ? (
+          <Modal4 
+            onClose={() => setShowCancelModal(false)}
+            onConfirm={() => navigate("/printshopPage")}
+          />
+        ) : (
+          <Modal3 
+            onClose={() => setShowCancelModal(false)}
+            onConfirm={() => navigate("/printshopPage")}
+          />
+        )
+      )}
+      
+      {showSaveModal && (
+        <Modal7
+          onClose={() => setShowSaveModal(false)}
+          onConfirm={() => window.location.href = nextUrl}
+        />
+      )}
+      <R.Container>
+        {/* 네브바 */}
+        <R.Header>
+          <R.HeaderMenu>
+            <R.CancelButton onClick={() => setShowCancelModal(true)}>
+              <R.CancelText>취소하기</R.CancelText>
+            </R.CancelButton>
           <R.Title>인쇄소 등록 [1/3]</R.Title>
           <div style={{ width: "89px" }} />
         </R.HeaderMenu>
@@ -215,14 +317,15 @@ const Register1 = () => {
           <R.NextButton
             $active={isActive && !isLoading}
             onClick={handleSubmit}
-            disabled={!isActive || isLoading}
+            disabled={!isActive}
           >
-            <R.NextText>{isLoading ? "등록 중..." : "다음"}</R.NextText>
+            {isLoading ? "등록 중..." : isEditMode ? '수정' : '다음'}
             {!isLoading && <R.NextIcon src={RightRegister} alt="next" />}
           </R.NextButton>
         </R.Footer>
       </R.FormWrapper>
     </R.Container>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ const useModal = (initialState = false) => {
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
+    setModalContent(null);
     document.body.style.overflow = 'unset';
   }, []);
 
