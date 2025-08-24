@@ -163,14 +163,8 @@ const Register1 = () => {
         response: result
       });
       
-      if (isEditMode) {
-        // 수정 모드일 경우 Modal7 표시
-        setNextUrl(nextStepUrl);
-        setShowSaveModal(true);
-      } else {
-        // 일반 등록 모드일 경우 바로 이동
-        window.location.href = nextStepUrl;
-      }
+      // 수정 모드에서도 바로 이동하도록 수정
+      window.location.href = nextStepUrl;
     } catch (err) {
       console.error("API 에러:", err);
       const errorMessage = err.response?.data?.message || err.message || "등록 중 오류가 발생했습니다.";
@@ -319,7 +313,7 @@ const Register1 = () => {
             onClick={handleSubmit}
             disabled={!isActive}
           >
-            {isLoading ? "등록 중..." : isEditMode ? '수정' : '다음'}
+            {isLoading ? "등록 중..." : '다음'}
             {!isLoading && <R.NextIcon src={RightRegister} alt="next" />}
           </R.NextButton>
         </R.Footer>
