@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 832px;
+  min-height: 100vh;
   align-self: stretch;
   background: var(--Neutral-100, #f2f2f2);
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 `;
 
 export const InnerWrapper = styled.div`
@@ -15,6 +16,9 @@ export const InnerWrapper = styled.div`
   align-items: flex-start;
   gap: 12px;
   margin-top: 91px;
+  min-height: calc(100vh - 200px);
+  position: relative;
+  padding-bottom: 80px;
 `;
 
 export const HeaderRow = styled.div`
@@ -273,6 +277,12 @@ export const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 0;
+  background: var(--Neutral-100, #f2f2f2);
   gap: 8px;
   margin-top: 24px;
   width: 100%;

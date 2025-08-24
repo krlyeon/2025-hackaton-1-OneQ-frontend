@@ -395,18 +395,7 @@ const Register2 = () => {
     const content = getCardContent(selectedOption);
     const currentData = sectionData[selectedOption] || {};
     
-    // Validate required sections
-    const requiredSections = content.type === 'three' ? ['section1', 'section2', 'section3'] : ['section1', 'section2'];
-    const hasAllSections = requiredSections.every(section => {
-      const sectionData = currentData[section];
-      return sectionData && sectionData.length > 0 && 
-             sectionData.every(row => row.input1 && row.input2);
-    });
-    
-    if (!hasAllSections) {
-      alert('모든 섹션에 데이터를 입력해주세요.');
-      return;
-    }
+    // Section validation removed as per user request
     
     if (!minOrderQuantity.trim()) {
       alert('최소 주문 수량을 입력해주세요.');
@@ -926,7 +915,7 @@ const Register2 = () => {
         <E.MenuInner>
           <E.TopBar>
             <E.CancelBtn onClick={() => setShowCancelModal(true)}>취소하기</E.CancelBtn>
-            <E.Title>인쇄소 등록 [2/3]</E.Title>
+            <E.Title>{isEditMode ? '인쇄소 수정 [2/2]' : '인쇄소 등록 [2/3]'}</E.Title>
             <E.StepBox>
             </E.StepBox>
           </E.TopBar>
@@ -1173,7 +1162,7 @@ const Register2 = () => {
               </E.MinOrder>
 
               <E.SubmitBtn onClick={handleSave} disabled={!isFormValid()}>
-                {isEditMode ? '수정' : '저장'}
+                저장
               </E.SubmitBtn>
             </E.Footer>
           </E.InputCard>

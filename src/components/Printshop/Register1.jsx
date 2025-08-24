@@ -210,7 +210,7 @@ const Register1 = () => {
             <R.CancelButton onClick={() => setShowCancelModal(true)}>
               <R.CancelText>취소하기</R.CancelText>
             </R.CancelButton>
-          <R.Title>인쇄소 등록 [1/3]</R.Title>
+          <R.Title>{isEditMode ? '인쇄소 수정 [1/2]' : '인쇄소 등록 [1/3]'}</R.Title>
           <div style={{ width: "89px" }} />
         </R.HeaderMenu>
       </R.Header>
