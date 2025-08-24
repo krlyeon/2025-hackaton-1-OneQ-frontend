@@ -188,8 +188,8 @@ function Register2_2() {
       // Prepare the request data with all required fields
       const requestData = {
         production_time: productionTime,
-        delivery_options: JSON.stringify(deliveryMethods),
-        bulk_discount: JSON.stringify(discountRules),
+        delivery_options: deliveryMethods,
+        bulk_discount: discountRules,
         available_categories: availableCategories // Include available categories in the request
       };
 
