@@ -22,8 +22,8 @@ export default function App() {
       <Route path="/score" element={<ScorePage />} />
       <Route path="/printshopPage" element={<PrintshopPage />} />
       <Route path="/printshopRegister" element={<PrintshopRegister />} />
-      <Route path="/printshopRegister2/:id?" element={<PrintshopRegister2 />} />
-        <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
+      <Route path="/printshopRegister2/:id" element={<PrintshopRegister2 />} />
+      <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
       </Routes>
     </PrintshopProvider>
   );

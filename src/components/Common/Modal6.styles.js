@@ -10,7 +10,6 @@ const M = {
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
-    background: rgba(0, 0, 0, 0.40);
   `,
 
   // 다이얼로그 컨테이너

@@ -133,9 +133,9 @@ export const CardOption = styled.div`
   img {
     width: 31px;
     height: 22px;
-    stroke: ${props => {
-      if (props.saved) return 'var(--Primary-500, #06F)';
-      if (props.selected) return 'var(--Neutral-600, #1A1A1A)';
+    filter: ${props => {
+      if (props.saved) return 'invert(29%) sepia(100%) saturate(7499%) hue-rotate(215deg) brightness(100%) contrast(106%)'; // #06F
+      if (props.selected) return 'invert(9%) sepia(10%) saturate(0%) hue-rotate(271deg) brightness(95%) contrast(86%)'; // #1A1A1A
       return 'inherit';
     }};
   }

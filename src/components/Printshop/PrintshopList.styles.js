@@ -168,8 +168,9 @@ export const HeadCellNo = styled.div`
 
 export const HeadCellName = styled.div`
   display: flex;
-  width: 310px;
+  width: 300px;
   padding: 16px 20px;
+  margin-left: 10px;
   align-items: center;
   color: var(--Neutral-600, #1a1a1a);
   font-size: 18px;
