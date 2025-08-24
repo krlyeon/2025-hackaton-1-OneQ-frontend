@@ -65,6 +65,20 @@ const N = {
       justify-content: center;
       align-items: center;
       gap: 10px;
+
+    &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;       /* 글자 아래 간격 */
+    height: 3px;
+    border-radius: 2px;
+    background: #2f80ed;     /* 파란색 라인 */
+    transform: scaleX(${p => (p.$active ? 1 : 0)});
+    transform-origin: left center;
+    transition: transform 0.2s ease-in-out;
+  }
     }
   `,
 

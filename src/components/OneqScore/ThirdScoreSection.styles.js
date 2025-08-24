@@ -157,7 +157,7 @@ const S = {
     flex: 1 0 0;
     color: var(--Neutral-100, #F2F2F2);
     font-family: Pretendard;
-    font-size: 27px;
+    font-size: 28px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
