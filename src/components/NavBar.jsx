@@ -8,9 +8,9 @@ export default function NavBar() {
     return (
         <N.Header>
             <N.NavContainer>
-                <N.SmallLogo src={SmalllogoImg} alt="ONEQ Logo" />
+                <N.SmallLogo src={SmalllogoImg} onClick={() => navigate("/") }/>
                 <N.NavMenu>
-                    <N.NavItem>Home</N.NavItem>
+                    <N.NavItem onClick={() => navigate("/")}>Home </N.NavItem>
                     <N.NavItem onClick={() => navigate("/printshopPage")}>인쇄소 등록</N.NavItem>
                     <N.NavItem><N.HighlightText onClick={() => navigate("/chose")}>견적 받기</N.HighlightText></N.NavItem>
                 </N.NavMenu>

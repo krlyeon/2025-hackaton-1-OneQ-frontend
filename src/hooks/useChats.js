@@ -43,7 +43,7 @@ function buildQuoteOnlyText(fq) {
 
   const L = [
     `${category || "인쇄"} 최종 견적`,
-    "==================================================",
+    "==============================================",
     quote_number ? `견적번호: ${quote_number}` : "",
     created_date ? `생성일: ${created_date}` : "",
     "",

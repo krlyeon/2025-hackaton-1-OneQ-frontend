@@ -32,6 +32,7 @@ const N = {
     justify-content: center;
     align-items: flex-start;
     gap: 3.2px;
+    cursor: pointer;
   `,
 
   NavMenu: styled.nav`
