@@ -53,7 +53,7 @@ function buildQuoteWithoutRecs(fq) {
 
   return [
     `견적번호  : ${quote_number || "-"}`,
-    `/ 생성일    : ${created_date || "-"}`,
+    `생성일    : ${created_date || "-"}`,
 
     "",
     `───────────────── [주문 정보] ────────────────`,
