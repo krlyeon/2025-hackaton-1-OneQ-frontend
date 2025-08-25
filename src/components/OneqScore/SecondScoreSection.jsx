@@ -195,13 +195,13 @@ function buildQuoteTextOnly(fq){
     `견적번호  : ${fq.quote_number || "-"}`,
     `생성일    : ${fq.creation_date || "-"}`,
     "",
-    `───────────────── [주문 정보] ────────────────`,
+    `──────────── [주문 정보] ──────────── `,
   ];
   for (const key of order) {
     const label = LABELS[key] || key;
     lines.push(`• ${label} : ${formatByKey(key, fq[key], fq.category)}`);
   }
-  lines.push("", `────────────────── [요약] ──────────────────`);
+  lines.push("", `─────────── [요약] ───────────`);
   if (fq.available_printshops != null) lines.push(`• 견적 가능 인쇄소 : ${fq.available_printshops}곳`);
   if (fq.price_range) lines.push(`• 가격대 : ${fq.price_range}`);
 
