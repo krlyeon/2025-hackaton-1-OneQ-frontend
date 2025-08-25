@@ -20,7 +20,7 @@ const N = {
     padding: 10px var(--Desktop-Margin, 32px);
     flex-direction: row;
     align-items: flex-start;
-    gap: 440px;
+    justify-content: center;
     align-self: stretch;
   `,
 
@@ -32,6 +32,8 @@ const N = {
     justify-content: center;
     align-items: flex-start;
     gap: 3.2px;
+    position: absolute;
+    left: 26px;
     cursor: pointer;
   `,
 
