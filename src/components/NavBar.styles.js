@@ -13,6 +13,7 @@ const N = {
   NavContainer: styled.div`
     display: flex;
     height: 55px;
+    position: relative;
     align-items: center;
     background: rgb(26 26 26);
     box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.3);
