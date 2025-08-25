@@ -7,10 +7,10 @@ export default function Footer() {
             <F.CompanyInfoSection>
                 <F.InfoTitle>주식회사 DE:V</F.InfoTitle>
                 <F.InfoText>
-                    대표자 <F.Highlight>조효동</F.Highlight><F.Space>사업자 등록번호 <F.Highlight>000-00-00000</F.Highlight></F.Space><br />
-                    통신판매업신고번호 <F.Highlight>2025-멋사구-0828</F.Highlight><br />
+                    대표자 <F.Highlight>손영채</F.Highlight><F.Space>사업자 등록번호 <F.Highlight>398-21-78362</F.Highlight></F.Space><br />
+                    통신판매업신고번호 <F.Highlight>2025-해커톤-0825</F.Highlight><br />
                     개인정보정책관리자 <F.Highlight>김유미</F.Highlight><br />
-                    주소 <F.Highlight>서울특별시 멋사구 동국대 우승로83, 실리콘밸리타워 106</F.Highlight>
+                    주소 <F.Highlight>서울특별시 서초구 강남대로 27 aT센터</F.Highlight>
                 </F.InfoText>
             </F.CompanyInfoSection>
             <F.LogoSection>
