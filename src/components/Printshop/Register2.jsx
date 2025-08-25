@@ -791,9 +791,17 @@ const Register2 = () => {
           card: 'business_card_quantity_price_info'
         };
         
+        // Set quantity for the current selected option
+        const currentQuantityField = quantityMappings[selectedOption];
+        if (data[currentQuantityField]) {
+          setMinOrderQuantity(String(data[currentQuantityField]));
+          newInputValues[`${selectedOption}_quantity`] = String(data[currentQuantityField]);
+        }
+        
+        // Also set quantities for other options if they exist
         Object.entries(quantityMappings).forEach(([uiId, apiField]) => {
-          if (data[apiField]) {
-            newInputValues[`${uiId}_quantity`] = data[apiField];
+          if (data[apiField] && uiId !== selectedOption) {
+            newInputValues[`${uiId}_quantity`] = String(data[apiField]);
           }
         });
         
