@@ -6,8 +6,15 @@ import S from "./SecondScoreSection.styles.js";
 const API_BASE = (import.meta.env?.VITE_API_BASE ?? "/api").replace(/\/$/, "");
 const SESSION_KEY = "oneq_server_session_id";
 
-// 🔎 콘솔 로깅 토글
-const DEBUG = true;
+/* ===== Debug toggle & logger (URL에 ?debug=1 or ?dbg=1) ===== */
+const DEBUG = (() => {
+  try {
+    const p = new URLSearchParams(location.search);
+    if (p.get("debug") === "1" || p.get("dbg") === "1") return true;
+  } catch {}
+  return false;
+})();
+const dlog = (...args) => { if (DEBUG) console.debug("[SecondScore]", ...args); };
 
 /* ===== helpers ===== */
 function getParam(name) {
@@ -25,26 +32,22 @@ function toKRnum(v) {
 }
 const coalesce = (...args) => args.find(v => v !== undefined && v !== null);
 
-// 예산 포맷: 최대한 자연스럽게 "만원" 기준으로
+// 예산 포맷: 자연스럽게 "만원" 기준, 범위/조건 표현은 원문 유지
 function formatBudget(budget) {
   if (budget == null || budget === "") return "-";
   const s = String(budget).trim();
-
-  // 범위/수식 표현은 원문 유지 (예: "25~35만원", "60만원 이상")
-  if (/[~\-–]|이상|이하|초과|미만/.test(s)) return s;
-
+  if (/[~\-–]|이상|이하|초과|미만/.test(s)) return s; // "22,000~42,000원", "60만원 이상" 등
   const n = Number(s.replace(/[^\d.-]/g, ""));
   const hasMan = /만\s*원?/.test(s);
   const hasWon = /원/.test(s);
   if (!Number.isFinite(n)) return s;
-
   if (hasMan) return `${toKRnum(n)}만원`;
   if (hasWon && n >= 10000) return `${toKRnum(Math.round(n / 10000))}만원`;
   if (!hasWon && n <= 500) return `${toKRnum(n)}만원`;
   return `${toKRnum(n)}원`;
 }
 
-// 납기 포맷: 숫자만이면 "일 이내" 붙임, 단위 있으면 원문 유지
+// 납기 포맷: 숫자만이면 "일 이내", 단위가 있으면 원문 유지
 function formatDue(due) {
   if (due == null || due === "") return "-";
   const s = String(due).trim();
@@ -52,9 +55,7 @@ function formatDue(due) {
   return s;
 }
 
-/* ===== finishing 탐색 유틸 ===== */
-
-// 값 정규화: 배열/객체 → 읽기 쉬운 문자열
+/* ===== finishing 탐색 (값이 어디에 있든 잡아오기) ===== */
 function normalizeFinishingValue(val) {
   if (val == null) return null;
   if (Array.isArray(val)) {
@@ -64,7 +65,6 @@ function normalizeFinishingValue(val) {
   if (typeof val === "object") {
     const pick = ["name","label","title","value","type","desc","description","text","option"];
     for (const k of pick) if (val[k]) return String(val[k]);
-    // { corner_rounding: true, radius: "3mm" } 같은 형태
     const truthy = Object.entries(val).filter(([,v]) => !!v).map(([k]) => k);
     if (truthy.length) return truthy.join(", ");
     return null;
@@ -73,19 +73,16 @@ function normalizeFinishingValue(val) {
   return s || null;
 }
 
-// 객체 전체를 깊게 훑어 후가공 관련 키/값 찾기 + 경로 반환
 function deepFindFinishingWithPath(obj) {
   const keyRe =
     /(finish|finishing|finishes|post[_\s-]?process(ing)?|after[_\s-]?process(ing)?|coating|laminat|uv|foil|emboss|deboss|die[_\s-]?cut|round|corner|귀도리|박|형압|코팅|후가공)/i;
   const seen = new WeakSet();
   const q = [{ node: obj, path: [] }];
-
   while (q.length) {
     const { node, path } = q.shift();
     if (!node || typeof node !== "object") continue;
     if (seen.has(node)) continue;
     seen.add(node);
-
     for (const [k, v] of Object.entries(node)) {
       const nextPath = path.concat(k);
       if (keyRe.test(k)) {
@@ -98,8 +95,9 @@ function deepFindFinishingWithPath(obj) {
   return { value: null, path: null };
 }
 
-/** API 응답 → 최종견적 오브젝트 (키 통합 + 딥스캔 + 로깅) */
+/* ===== API 응답 → 최종견적 정규화 (명세서 호환) ===== */
 function extractFinalQuote(json = {}) {
+  // 최종 견적 본문: 여러 키 스키마 지원
   const source =
     json.final_quote_data ||
     json.quote_info ||
@@ -108,77 +106,77 @@ function extractFinalQuote(json = {}) {
     json.data?.quote_info ||
     {};
 
-  const slots = json.slots || source.slots || {};
+  // 명세서: 최종 견적일 때 collected_slots 포함
+  const collected = json.collected_slots || source.collected_slots || {};
+  const slots     = json.slots || source.slots || {};
 
   const creation_date =
     source.creation_date || source.created_date || json.creation_date || json.created_date;
 
-  // 1) 얕은 후보 키들
+  // finishing 우선순위: source → slots → collected → (coating/post_processing 등 대체 키) → 딥스캔
   const finishingCandidates = {
     "source.finishing":        source.finishing,
     "slots.finishing":         slots.finishing,
+    "collected.finishing":     collected.finishing,
     "source.coating":          source.coating,
     "slots.coating":           slots.coating,
+    "collected.coating":       collected.coating,
     "source.post_processing":  source.post_processing,
     "slots.post_processing":   slots.post_processing,
+    "collected.post_processing": collected.post_processing,
     "source.postprocess":      source.postprocess,
     "slots.postprocess":       slots.postprocess,
-    "json.finishing":          json.finishing,
-    "json.coating":            json.coating,
+    "collected.postprocess":   collected.postprocess,
   };
+
   let finishing =
     finishingCandidates["source.finishing"] ??
     finishingCandidates["slots.finishing"] ??
+    finishingCandidates["collected.finishing"] ??
     finishingCandidates["source.coating"] ??
     finishingCandidates["slots.coating"] ??
+    finishingCandidates["collected.coating"] ??
     finishingCandidates["source.post_processing"] ??
     finishingCandidates["slots.post_processing"] ??
+    finishingCandidates["collected.post_processing"] ??
     finishingCandidates["source.postprocess"] ??
     finishingCandidates["slots.postprocess"] ??
-    finishingCandidates["json.finishing"] ??
-    finishingCandidates["json.coating"] ??
+    finishingCandidates["collected.postprocess"] ??
     null;
 
-  // 2) 못 찾으면 전체 깊게 스캔
-  let deepPath = null;
   if (finishing == null) {
-    const { value, path } = deepFindFinishingWithPath({ source, slots, root: json });
+    const { value, path } = deepFindFinishingWithPath({ source, slots, collected, root: json });
     finishing = value;
-    deepPath = path;
-  }
-
-  if (DEBUG) {
-    console.groupCollapsed("[SecondScore] Finishing trace");
-    console.log("slots keys:", Object.keys(slots || {}));
-    console.log("shallow candidates:", finishingCandidates);
-    console.log("picked (shallow):",
-      Object.entries(finishingCandidates).find(([,v]) => v != null)?.[0] ?? "(none)");
-    console.log("deep result:", { value: finishing ?? "(none)", path: deepPath });
-    console.groupEnd();
+    if (DEBUG && (value || path)) console.debug("[SecondScore] finishing deep path:", path, "→", value);
   }
 
   const fq = {
     quote_number: source.quote_number ?? "-",
     creation_date: creation_date ?? "-",
     category: source.category ?? "-",
-    quantity: coalesce(source.quantity, slots.quantity, "-"),
-    size:     coalesce(source.size,     slots.size, "-"),
-    paper:    coalesce(source.paper,    slots.paper, "-"),
-    finishing: finishing ?? "-",                    // ← 최종 확정
-    due_days:  coalesce(source.due_days, slots.due_days, "-"),
-    budget:    coalesce(source.budget,   slots.budget, "-"),
-    region:    coalesce(source.region,   slots.region, "-"),
+
+    // 모든 슬롯: source → slots → collected 우선순위
+    quantity: (source.quantity ?? slots.quantity ?? collected.quantity ?? "-"),
+    size:     (source.size     ?? slots.size     ?? collected.size     ?? "-"),
+    paper:    (source.paper    ?? slots.paper    ?? collected.paper    ?? "-"),
+    printing: (source.printing ?? slots.printing ?? collected.printing ?? "-"),
+    finishing: (finishing && String(finishing).trim()) || "-",
+    due_days:  (source.due_days  ?? slots.due_days  ?? collected.due_days  ?? "-"),
+    budget:    (source.budget    ?? slots.budget    ?? collected.budget    ?? "-"),
+    region:    (source.region    ?? slots.region    ?? collected.region    ?? "-"),
+
     available_printshops:
-      coalesce(source.available_printshops, source.total_available,
-               json.available_printshops, json.total_available),
-    price_range: coalesce(source.price_range, json.price_range),
+      (source.available_printshops ?? source.total_available ??
+       json.available_printshops   ?? json.total_available),
+
+    price_range: (source.price_range ?? json.price_range),
   };
 
-  if (DEBUG) console.log("[SecondScore] normalized final quote:", fq);
+  dlog("final quote preview:", fq);
   return fq;
 }
 
-/** 화면용 텍스트 생성 */
+/* ===== 화면용 문자열 생성 ===== */
 function buildQuoteTextOnly(fq) {
   if (!fq) return "최종 견적서를 찾을 수 없습니다.";
 
@@ -198,6 +196,7 @@ function buildQuoteTextOnly(fq) {
     `• 수량 :   ${qtyStr}`,
     `• 사이즈 :  ${fq.size || "-"}`,
     `• 용지 :   ${fq.paper || "-"}`,
+    `• 인쇄 :   ${fq.printing || "-"}`,   // 명세서 대응
     `• 후가공 :  ${fq.finishing || "-"}`,
     `• 납기 :   ${formatDue(fq.due_days)}`,
     `• 예산 :   ${formatBudget(fq.budget)}`,
@@ -211,7 +210,7 @@ function buildQuoteTextOnly(fq) {
   if (fq.price_range) lines.push(`• 가격대 : ${fq.price_range}`);
 
   const text = lines.join("\n");
-  if (DEBUG) console.log("[SecondScore] render text:\n" + text);
+  dlog("render text:", "\n" + text);
   return text;
 }
 
@@ -239,7 +238,6 @@ export default function SecondScoreSection() {
         });
 
         const json = await res.json().catch(() => ({}));
-        if (DEBUG) console.log("[SecondScore] /chat/quote response:", json);
         if (!res.ok) throw new Error(json?.detail || `HTTP ${res.status}`);
 
         const fq = extractFinalQuote(json);
