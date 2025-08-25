@@ -77,7 +77,7 @@ const S = {
 
   Content: styled.div`
     display: flex;
-    padding: 120px 28px 18px 28px;
+    padding: 100px 28px 18px 28px;
     align-items: center;
     gap: 12px;
     flex: 1 0 0;

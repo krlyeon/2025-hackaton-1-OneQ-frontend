@@ -195,13 +195,13 @@ function buildQuoteTextOnly(fq){
     `견적번호  : ${fq.quote_number || "-"}`,
     `생성일    : ${fq.creation_date || "-"}`,
     "",
-    `──────────── [주문 정보] ──────────── `,
+    `────────────── [주문 정보] ────────────── `,
   ];
   for (const key of order) {
     const label = LABELS[key] || key;
     lines.push(`• ${label} : ${formatByKey(key, fq[key], fq.category)}`);
   }
-  lines.push("", `─────────── [요약] ───────────`);
+  lines.push("", `───────────── [요약] ─────────────`);
   if (fq.available_printshops != null) lines.push(`• 견적 가능 인쇄소 : ${fq.available_printshops}곳`);
   if (fq.price_range) lines.push(`• 가격대 : ${fq.price_range}`);
 
@@ -245,7 +245,7 @@ export default function SecondScoreSection(){
           <S.Vector />
           <S.Content>
             <S.Context>
-              {loading && "최종 견적서 산출까지 시간이 조금 걸릴 수 있습니다."}
+              {loading && "최종 견적서가 5분 이내에 산출됩니다. 잠시만 기다려주세요!"}
               {!loading && error && <span style={{ color: "black" }}>{error}</span>}
               {!loading && !error && <S.pre>{text}</S.pre>}
             </S.Context>
