@@ -133,9 +133,9 @@ export const CardOption = styled.div`
   img {
     width: 31px;
     height: 22px;
-    stroke: ${props => {
-      if (props.saved) return 'var(--Primary-500, #06F)';
-      if (props.selected) return 'var(--Neutral-600, #1A1A1A)';
+    filter: ${props => {
+      if (props.saved) return 'invert(29%) sepia(100%) saturate(7499%) hue-rotate(215deg) brightness(100%) contrast(106%)'; // #06F
+      if (props.selected) return 'invert(9%) sepia(10%) saturate(0%) hue-rotate(271deg) brightness(95%) contrast(86%)'; // #1A1A1A
       return 'inherit';
     }};
   }
@@ -189,14 +189,19 @@ export const InputBox = styled.div`
   border: 1px solid #bfbfbf;
   border-radius: 10px;
   background: #d9d9d9;
+  height: 318px; /* Fixed height to match the design */
+  overflow: hidden;
 `;
 
 export const InputList = styled.div`
   display: flex;
   flex-direction: column;
-  height: 276px;
-  padding: 0 12px;
-  margin-top: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 10px 12px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  gap: 8px;
 `;
 
 export const InputRow = styled.div`
@@ -367,26 +372,34 @@ export const ThreeDeliveryBox = styled.div`
   border-radius: 10px;
   border: 1px solid var(--Neutral-300, #bfbfbf);
   background: var(--Neutral-200, #d9d9d9);
+  height: 165px; /* Fixed height */
+  overflow: hidden;
 `;
 
 export const ThreeDeliveryList = styled.div`
   display: flex;
-  height: 132px;
   flex-direction: column;
   align-items: flex-start;
-  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 60px; /* Space for the input area */
+  box-sizing: border-box;
+  position: relative;
 `;
 
 export const ThreeDeliveryInputWrapper = styled.div`
-  display: flex;
+  position: sticky;
+  bottom: 0;
   width: 100%;
-  height: 122px;
-  max-height: 122px;
   padding: 12px 10px;
+  background: var(--Neutral-200, #d9d9d9);
+  border-top: 1px solid var(--Neutral-300, #bfbfbf);
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
-width: 97%;
   gap: 8px;
-  flex-shrink: 0;
+  z-index: 1;
 `;
 
 export const ThreeDeliveryInput = styled.input`

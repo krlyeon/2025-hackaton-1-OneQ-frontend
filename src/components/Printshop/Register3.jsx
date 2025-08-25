@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePrintshop } from "../../contexts/PrintshopContext";
+import Modal3 from "../Common/Modal3";
+import Modal6 from "../Common/Modal6";
 import {
   Container,
   Menu,
@@ -44,6 +46,8 @@ const Register3 = () => {
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [agree, setAgree] = useState(false);
 
   // 비밀번호 유효성 검사
@@ -66,7 +70,16 @@ const Register3 = () => {
       setIsSubmitting(true);
       setError("");
 
-      // FormData 생성
+      // Check registration status before proceeding
+      const statusRes = await fetch(
+        `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/registration-status/`
+      );
+      const statusJson = await statusRes.json();
+      if (statusJson?.status !== 'step2') {
+        throw new Error('2단계를 먼저 완료해주세요. (현재 상태: ' + statusJson?.status + ')');
+      }
+
+      // Create FormData
       const formData = new FormData();
       formData.append("password", password);
       formData.append("password_confirm", confirmPassword);
@@ -76,50 +89,51 @@ const Register3 = () => {
         throw new Error('인쇄소 ID를 찾을 수 없습니다.');
       }
 
-      // API 호출
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/finalize/`,
-        {
-          method: "PUT",
-          body: formData,
-          headers: {
-            'Accept': 'application/json',
-          },
-          // credentials: 'include' // 쿠키 기반 인증이 필요한 경우
-        }
-      );
+      const apiUrl = `${import.meta.env.VITE_API_BASE}printshops/${printshopId}/finalize/`;
+      console.log('API URL:', apiUrl);
+      console.log('Request Data:', {
+        password: password,
+        password_confirm: confirmPassword,
+        business_license: file ? file.name : 'No file'
+      });
 
+      // Make the finalize API call
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      console.log('Response Status:', response.status);
       const contentType = response.headers.get('content-type');
-      let responseData;
       
-      if (contentType && contentType.includes('application/json')) {
-        responseData = await response.json();
-      } else {
-        const text = await response.text();
-        throw new Error(text || '서버에서 잘못된 응답을 받았습니다.');
-      }
-
       if (!response.ok) {
-        throw new Error(
-          responseData.error || 
-          responseData.detail ||
-          responseData.password_confirm || 
-          responseData.password?.[0] ||
-          responseData.business_license?.[0] ||
-          '등록에 실패했습니다.'
-        );
+        let errorMessage = "등록 중 오류가 발생했습니다. 다시 시도해주세요.";
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } else {
+          const text = await response.text();
+          errorMessage = `서버 오류 (${response.status}): ${text.substring(0, 100)}...`;
+        }
+        throw new Error(errorMessage);
       }
 
-      if (responseData.status === "completed") {
-        // 등록 완료 후 리다이렉트
-        navigate("/printshopPage");
-      }
+      // Show success modal
+      setShowSuccessModal(true);
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error("등록 오류:", err);
       setError(err.message);
     } finally {
       setIsSubmitting(false);
     }
+  };
+  
+  const handleSuccessConfirm = () => {
+    setShowSuccessModal(false);
+    navigate("/printshopPage");
   };
 
   return (
@@ -128,7 +142,7 @@ const Register3 = () => {
       <Menu>
         <MenuInner>
           <Frame7>
-            <CancelButton onClick={() => navigate("/printshopPage")}>
+            <CancelButton onClick={() => setShowCancelModal(true)}>
               취소하기
             </CancelButton>
             <Title>인쇄소 등록 [3/3]</Title>
@@ -220,26 +234,33 @@ const Register3 = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             width: "60%",
             marginBottom: "36px",
           }}
         >
-          <BackButton type="button" onClick={() => window.history.back()}>
-            <img src={leftIcon} alt="back" />
-            뒤로
-          </BackButton>
           <SubmitButton 
             type="button"
             onClick={handleSubmit}
             disabled={!isFormValid || isSubmitting}
             style={{ opacity: isFormValid ? 1 : 0.5 }}
-          >
-            {isSubmitting ? '처리 중...' : '등록'}
+          >등록
           </SubmitButton>
           {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
         </div>
       </MainWrapper>
+      {showCancelModal && (
+        <Modal3 
+          onClose={() => setShowCancelModal(false)}
+          onConfirm={() => navigate('/printshopPage')}
+        />
+      )}
+      {showSuccessModal && (
+        <Modal6
+          onClose={() => setShowSuccessModal(false)}
+          onConfirm={handleSuccessConfirm}
+        />
+      )}
     </Container>
   );
 };

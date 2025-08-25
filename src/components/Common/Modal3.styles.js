@@ -2,42 +2,40 @@ import styled from "styled-components";
 
 const M = {
   Modal: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
-    height: 100vh;
-    padding: 125px 119px;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    background: rgba(0, 0, 0, 0.40);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
   `,
 
   // 다이얼로그 컨테이너
   ModalContainer: styled.div`
+    position: relative;
     display: flex;
-    padding-bottom: 50px;
+    padding: 50px 64px;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    align-items: center;
+    gap: 20px;
     border-radius: 20px;
     background: var(--Neutral-100, #F2F2F2);
     box-shadow: 0 40px 30px 0 rgba(0, 0, 0, 0.25);
+    max-width: 80%;
+    width: 100%;
+    max-width: 600px;
   `,
 
   Header: styled.img`
-    display: flex;
-    padding: 22px 24px 10px 822px;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 10px;
-    align-self: stretch;
-    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 20px;
     width: 24px;
     height: 24px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
     cursor: pointer;
   `,
 
@@ -54,7 +52,6 @@ const M = {
   // 경고 아이콘 + 텍스트 래퍼
   Warning: styled.div`
     display: flex;
-    padding: 0 64px;
     align-items: flex-start;
     gap: 22px;
     align-self: stretch;
@@ -102,7 +99,6 @@ const M = {
   // 버튼 영역
   Button: styled.div`
     display: flex;
-    padding: 0 64px;
     justify-content: flex-end;
     align-items: center;
     gap: 32px;

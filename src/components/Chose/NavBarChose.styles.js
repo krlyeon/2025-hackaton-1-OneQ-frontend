@@ -192,4 +192,6 @@ export const BalloonBox = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 19.6px */
+  padding-bottom: 25px;
+    padding-left: 15px;
 `;

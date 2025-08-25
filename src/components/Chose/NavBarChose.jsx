@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import * as C from "./NavBarChose.styles";
-
+import { useNavigate } from "react-router-dom";
 import arrowBackIcon from "../../assets/arrow-back.png";
 import dottedLineIcon from "../../assets/line-dotted.png";
 
 const NavBarChose = () => {
   const [showBalloon, setShowBalloon] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <C.NavBarContainer>
       <C.Left>
         <C.BackButton>
-          <img src={arrowBackIcon} alt="뒤로가기" />
+          <img src={arrowBackIcon} alt="뒤로가기" onClick={() => navigate("/")}/>
         </C.BackButton>
       </C.Left>
       <C.Center>

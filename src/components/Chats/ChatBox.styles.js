@@ -138,13 +138,6 @@ const C = {
         cursor: not-allowed;
     }
     `,
-
-    DebugInfo: styled.div`
-        margin-top: 12px;
-        font-size: 12px;
-        color: #666;
-        b { color: #444; }
-    `,
 };
 
 export default C;

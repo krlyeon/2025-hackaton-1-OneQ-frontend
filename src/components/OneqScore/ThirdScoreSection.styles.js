@@ -119,6 +119,7 @@ const S = {
     padding: 0 53.16px;
     align-items: center;
     gap: 32px;
+    justify-content: center;
   `,
 
   Content: styled.article`
@@ -139,7 +140,7 @@ const S = {
     align-self: stretch;
     color: var(--Neutral-400, #808080);
     font-family: Pretendard;
-    font-size: 18px;
+    font-size: 17px;
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
@@ -157,7 +158,7 @@ const S = {
     flex: 1 0 0;
     color: var(--Neutral-100, #F2F2F2);
     font-family: Pretendard;
-    font-size: 32px;
+    font-size: 28px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -282,6 +283,7 @@ const S = {
     line-height: normal;
     border-radius: 20px;
     background: var(--Primary-500, #06F);
+    cursor: pointer;
   `,
 };
 

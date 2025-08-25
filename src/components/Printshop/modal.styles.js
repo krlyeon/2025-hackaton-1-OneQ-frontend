@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
-// 전체 감싸는 레이어 (검정 배경 지정은 필요 없다고 하셔서 뺐습니다)
 export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  width: 1280px;
-  height: 849px;
-  padding: 125px 119px;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);  
 `;
 
-// 모달 박스
 export const ModalBox = styled.div`
   display: flex;
   width: 600px;
@@ -21,16 +21,18 @@ export const ModalBox = styled.div`
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  position: relative;
   border-radius: 20px;
-  background: #f5f5f5;
+background: var(--Neutral-100, #F2F2F2);
+box-shadow: 0 40px 30px 0 rgba(0, 0, 0, 0.25);
 `;
 
-// 상단 닫기 버튼 영역
-export const HeaderSection = styled.div`
+export const ModalHeader = styled.div`
   display: flex;
   padding: 22px 24px 10px 10px;
   justify-content: flex-end;
   align-items: flex-end;
+  gap: 10px;
   align-self: stretch;
 `;
 
@@ -40,6 +42,8 @@ export const CloseWrapper = styled.div`
   height: 24px;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+  cursor: pointer;
 `;
 
 export const CloseIcon = styled.img`
@@ -47,16 +51,24 @@ export const CloseIcon = styled.img`
   height: 20px;
   flex-shrink: 0;
   fill: var(--Neutral-400, #808080);
-  cursor: pointer;
 `;
 
-// 타이틀 영역
-export const TitleSection = styled.div`
+export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 44px;
+  align-self: stretch;
+  padding: 40px 64px 64px 64px;
+`;
+
+export const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
   align-self: stretch;
 `;
 
@@ -64,27 +76,31 @@ export const TitleText = styled.h2`
   color: #000;
   font-family: Pretendard;
   font-size: 32px;
+  font-style: normal;
   font-weight: 700;
+  line-height: normal;
+  margin: 0;
 `;
 
 export const SubText = styled.p`
-  color: var(--Neutral-500, #4d4d4d);
+  color: var(--Neutral-500, #4D4D4D);
   font-family: Pretendard;
   font-size: 16px;
+  font-style: normal;
   font-weight: 400;
+  line-height: normal;
+  margin: 0;
 `;
 
-// 내용 영역
-export const ContentSection = styled.div`
+export const InputSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
-  margin-top: 40px;
+  width: 100%;
 `;
 
-// 입력 필드
-export const InputWrapper = styled.div`
+export const InputField = styled.div`
   display: flex;
   width: 413px;
   flex-direction: column;
@@ -92,15 +108,16 @@ export const InputWrapper = styled.div`
   gap: 11px;
 `;
 
-export const InputBox = styled.div`
+export const InputWrapper = styled.div`
   display: flex;
-  height: 69px;
+  height: 29px;
   padding: 22px;
   flex-direction: column;
   align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
   border-radius: 20px;
-  background: #d9d9d9;
-  width: 100%;
+  background: #D9D9D9;
 `;
 
 export const PasswordInput = styled.input`
@@ -108,33 +125,61 @@ export const PasswordInput = styled.input`
   border: none;
   outline: none;
   background: transparent;
+  color: var(--Neutral-600, #1A1A1A);
   font-family: Pretendard;
   font-size: 18px;
+  font-style: normal;
   font-weight: 500;
-  color: var(--Neutral-600, #1a1a1a);
+  line-height: 140%;
+  
+  &::placeholder {
+    color: var(--Neutral-400, #808080);
+  }
 `;
 
-// 버튼 영역
-export const ActionWrapper = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   padding-top: 16.1px;
   align-items: center;
   gap: 10px;
 `;
 
-export const SubmitButton = styled.button`
+export const StyledSubmitButton = styled.button`
   display: flex;
   padding: 4px;
   justify-content: center;
   align-items: center;
+  gap: 2px;
   border-radius: 10px;
-  background: var(--Primary-500, #06f);
+  background: ${props => 
+    props.$verified ? 'var(--Primary-500, #06F)' : 
+    props.$active ? 'var(--Primary-500, #06F)' : 'var(--Neutral-400, #808080)'};
+  width: 35px;
+  height: 33px;
   border: none;
-  cursor: pointer;
+  cursor: ${props => (props.$active && !props.disabled) ? 'pointer' : 'not-allowed'};
+  opacity: ${props => props.disabled ? 0.7 : 1};
+  transition: all 0.2s ease;
 `;
 
 export const SubmitIcon = styled.img`
-  width: 28.8px;
-  height: 28.8px;
-  transform: rotate(90deg);
+  width: 20px;
+  height: 25px;
+  aspect-ratio: 1/1;
 `;
+
+export const ErrorMessage = styled.p`
+  color: #FF3333;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 8px 0 0 0;
+  text-align: center;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+`;
+

@@ -5,18 +5,16 @@ export const Container = styled.div`
   height: 862px;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
-  padding: 0 455px;
+  align-items: center;
+  padding: 0 223px;
 `;
 
 export const Content = styled.div`
   display: flex;
-  padding: 0 36px;
+  width: 910px;
   flex-direction: column;
   align-items: flex-start;
   gap: 48px;
-  align-self: stretch;
 `;
 
 export const Section = styled.div`
@@ -104,26 +102,34 @@ export const DeliveryBox = styled.div`
   border-radius: 10px;
   border: 1px solid var(--Neutral-300, #bfbfbf);
   background: var(--Neutral-200, #d9d9d9);
+  height: 165px; /* Fixed height to match Register2 */
+  overflow: hidden;
 `;
 
 export const DeliveryList = styled.div`
   display: flex;
-  height: 132px;
   flex-direction: column;
   align-items: flex-start;
-  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 60px; /* Space for the input area */
+  box-sizing: border-box;
+  position: relative;
 `;
 
 export const DeliveryInputWrapper = styled.div`
-  display: flex;
-  width: 890px;
-  height: 122px;
-  max-height: 122px;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
   padding: 12px 10px;
+  background: var(--Neutral-200, #d9d9d9);
+  border-top: 1px solid var(--Neutral-300, #bfbfbf);
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
-  flex-shrink: 0;
+  z-index: 1;
 `;
 
 export const DeliveryInput = styled.input`
@@ -180,8 +186,7 @@ export const AddText = styled.div`
 
 export const Footer = styled.div`
   display: flex;
-  padding: 0 36px;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   align-self: stretch;
   margin-bottom: 20px;

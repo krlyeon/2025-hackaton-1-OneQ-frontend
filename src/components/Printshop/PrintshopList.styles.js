@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 832px;
+  min-height: 100vh;
   align-self: stretch;
   background: var(--Neutral-100, #f2f2f2);
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 `;
 
 export const InnerWrapper = styled.div`
@@ -15,6 +16,9 @@ export const InnerWrapper = styled.div`
   align-items: flex-start;
   gap: 12px;
   margin-top: 91px;
+  min-height: calc(100vh - 200px);
+  position: relative;
+  padding-bottom: 80px;
 `;
 
 export const HeaderRow = styled.div`
@@ -62,6 +66,56 @@ export const SearchText = styled.span`
 export const SearchIcon = styled.img`
   width: 18px;
   height: 18px;
+`;
+
+export const SearchInput = styled.input`
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--Neutral-600, #1a1a1a);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 140%;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  padding-right: 10px;
+
+  &::placeholder {
+    color: var(--Neutral-400, #808080);
+  }
+`;
+
+export const ClearButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--Neutral-400, #808080);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: var(--Neutral-600, #1a1a1a);
+  }
+`;
+
+export const SearchButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const SubText = styled.p`
@@ -118,8 +172,9 @@ export const HeadCellNo = styled.div`
 
 export const HeadCellName = styled.div`
   display: flex;
-  width: 310px;
+  width: 300px;
   padding: 16px 20px;
+  margin-left: 10px;
   align-items: center;
   color: var(--Neutral-600, #1a1a1a);
   font-size: 18px;
@@ -147,41 +202,63 @@ export const TableBody = styled.div`
 export const TableRow = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const CellNo = styled.div`
   display: flex;
-  padding: 16px 20px;
+  width: 60px;
+  padding: 16px 10px;
   justify-content: center;
   align-items: center;
   color: var(--Neutral-600, #1a1a1a);
   font-size: 18px;
   font-weight: 500;
+  box-sizing: border-box;
 `;
 
 export const CellName = styled.div`
   display: flex;
-  width: 310px;
-  padding: 16px 20px;
+  width: 330px;
+  padding: 16px 30px;
   align-items: center;
   color: var(--Neutral-600, #1a1a1a);
   font-size: 18px;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 `;
 
 export const CellDate = styled.div`
   display: flex;
-  width: 270px;
+  width: 300px;
   padding: 16px 20px;
   align-items: center;
   color: var(--Neutral-400, #808080);
   font-size: 18px;
   font-weight: 500;
+  box-sizing: border-box;
+`;
+
+export const CellDate2 = styled.div`
+  display: flex;
+  width: 300px;
+  padding: 16px 90px;
+  align-items: center;
+  color: var(--Neutral-400, #808080);
+  font-size: 18px;
+  font-weight: 500;
+  box-sizing: border-box;
 `;
 
 export const EditButton = styled.button`
   display: flex;
   padding: 10px 15px;
+  margin-left: auto;
+  margin-right: 20px;
   justify-content: center;
   align-items: center;
   border-radius: 30px;
@@ -193,28 +270,68 @@ export const EditButton = styled.button`
   font-weight: 400;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 `;
 
 export const Pagination = styled.div`
   display: flex;
-  width: 1280px;
-  padding: 10px 30px;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 0;
+  background: var(--Neutral-100, #f2f2f2);
+  gap: 8px;
+  margin-top: 24px;
+  width: 100%;
+`;
+
+export const PageButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: var(--Neutral-200, #d9d9d9);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 export const PageNumbers = styled.div`
   display: flex;
+  gap: 4px;
+`;
+
+export const PageNumber = styled.span`
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: ${props => props.active ? 'var(--Neutral-600, #1a1a1a)' : 'transparent'};
+  color: ${props => props.active ? 'white' : 'var(--Neutral-600, #1a1a1a)'};
 
-
-  span {
-    color: var(--Neutral-600, #1a1a1a);
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
+  &:hover {
+    background-color: ${props => props.active ? 'var(--Neutral-600, #1a1a1a)' : 'var(--Neutral-200, #d9d9d9)'};
   }
 `;

@@ -9,7 +9,8 @@ import PrintshopPage from "./pages/PrintshopPage.jsx";
 import PrintshopRegister from "./pages/PrintshopRegister.jsx";
 import PrintshopRegister2 from "./pages/PrintshopRegister2.jsx";
 import PrintshopRegister3 from "./pages/PrintshopRegister3.jsx";
-import ScorePage from "./pages/ScorePage.jsx"; // 원큐스코어 페이지
+
+console.log("App ScorePage binding =", ScorePage);
 
 export default function App() {
   return (
@@ -21,9 +22,8 @@ export default function App() {
       <Route path="/score" element={<ScorePage />} />
       <Route path="/printshopPage" element={<PrintshopPage />} />
       <Route path="/printshopRegister" element={<PrintshopRegister />} />
-      <Route path="/printshopRegister2/:id?" element={<PrintshopRegister2 />} />
-        <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
-        <Route path="/score" element={<ScorePage />} />
+      <Route path="/printshopRegister2/:id" element={<PrintshopRegister2 />} />
+      <Route path="/printshopRegister3/:id" element={<PrintshopRegister3 />} />
       </Routes>
     </PrintshopProvider>
   );

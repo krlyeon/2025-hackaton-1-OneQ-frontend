@@ -209,9 +209,9 @@ export const SubmitButton = styled.div`
   border-radius: 15px;
   justify-content: center;
   align-items: center;
-  background: ${({ canSubmit }) => (canSubmit ? "#1a1a1a" : "#808080")};
+  background: ${({ disabled }) => (disabled ? "#808080" : "#06F")};
   color: #f2f2f2;
   font-size: 20px;
   font-weight: 600;
-  cursor: ${({ canSubmit }) => (canSubmit ? "pointer" : "not-allowed")};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;

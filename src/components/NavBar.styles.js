@@ -13,6 +13,7 @@ const N = {
   NavContainer: styled.div`
     display: flex;
     height: 55px;
+    position: relative;
     align-items: center;
     background: rgb(26 26 26);
     box-shadow: 10px 10px 40px 0 rgba(0, 0, 0, 0.3);
@@ -20,7 +21,7 @@ const N = {
     padding: 10px var(--Desktop-Margin, 32px);
     flex-direction: row;
     align-items: flex-start;
-    gap: 440px;
+    justify-content: center;
     align-self: stretch;
   `,
 
@@ -32,6 +33,9 @@ const N = {
     justify-content: center;
     align-items: flex-start;
     gap: 3.2px;
+    position: absolute;
+    left: 26px;
+    cursor: pointer;
   `,
 
   NavMenu: styled.nav`
@@ -65,6 +69,20 @@ const N = {
       justify-content: center;
       align-items: center;
       gap: 10px;
+
+    &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;       /* 글자 아래 간격 */
+    height: 3px;
+    border-radius: 2px;
+    background: #2f80ed;     /* 파란색 라인 */
+    transform: scaleX(${p => (p.$active ? 1 : 0)});
+    transform-origin: left center;
+    transition: transform 0.2s ease-in-out;
+  }
     }
   `,
 
